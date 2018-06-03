@@ -32,7 +32,7 @@ export class KatComponent implements OnInit {
   getKatWarning() {
     const param = this.route.snapshot.paramMap.get('id');
     const id = +param;
-    if (id !== 0) {
+    if (id >= 0) {
       this.katwarnService.getKatWarning(id)
         .subscribe(katwarn => {
           this.katWarning = katwarn;

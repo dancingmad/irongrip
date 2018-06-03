@@ -269,7 +269,7 @@ var KatComponent = /** @class */ (function () {
         var _this = this;
         var param = this.route.snapshot.paramMap.get('id');
         var id = +param;
-        if (id !== 0) {
+        if (id >= 0) {
             this.katwarnService.getKatWarning(id)
                 .subscribe(function (katwarn) {
                 _this.katWarning = katwarn;
