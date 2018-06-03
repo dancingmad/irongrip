@@ -1,4 +1,4 @@
-package com.example.irongrp;
+package com.fiftyoneapps.irongrp;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
