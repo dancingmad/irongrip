@@ -1,4 +1,4 @@
-package com.fiftyoneapps.irongrp.api;
+package com.fiftyoneapps.irongrp.api.hero;
 
 import com.fiftyoneapps.irongrp.service.hero.HeroService;
 import com.fiftyoneapps.irongrp.service.exception.GeneralException;

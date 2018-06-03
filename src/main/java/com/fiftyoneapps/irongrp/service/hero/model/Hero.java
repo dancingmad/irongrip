@@ -1,13 +1,11 @@
-package com.fiftyoneapps.irongrp.service.model;
+package com.fiftyoneapps.irongrp.service.hero.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @NodeEntity
 @JsonIgnoreProperties(ignoreUnknown = true)

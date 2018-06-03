@@ -1,4 +1,6 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
-public class TranslationTagRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface TranslationTagRepository extends CrudRepository<TranslationTag, Long> {
 }

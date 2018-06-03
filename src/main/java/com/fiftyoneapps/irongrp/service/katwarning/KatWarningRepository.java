@@ -1,4 +1,6 @@
 package com.fiftyoneapps.irongrp.service.katwarning;
 
-public class KatWarningRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface KatWarningRepository extends CrudRepository<KatWarning, Long>{
 }

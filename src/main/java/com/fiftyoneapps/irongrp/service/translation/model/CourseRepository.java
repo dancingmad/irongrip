@@ -1,4 +1,6 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
-public interface CourseRepository {
+import org.springframework.data.repository.CrudRepository;
+
+public interface CourseRepository extends CrudRepository<Course,Long> {
 }

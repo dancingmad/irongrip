@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-2">ID</div><div class="col-6">{{katWarning.id}}</div>
+</div>
+<div class="row">
+  <div class="col-2">Typ</div><div class="col-6">
+    <select [(ngModel)]="katWarning.type" id="type">
+      <option value="">None</option>
+      <option value="default">Default</option>
+    </select>
+  </div>
+</div>
+<div class="row" *ngIf="katWarning.type=='default'">
+  <div class="col-9 offset-2">
+      In der Zeit zwischen <input class="mini-input" type="number" min="0" max="24" [(ngModel)]="katWarning.fromTime" maxlength="2" name="fromTime"> und <input maxlength="2" class="mini-input" type="number" min="0" max="24" [(ngModel)]="katWarning.toTime" name="toTime"> Uhr
+      werden heute im südlichen Teil des Neusiedler Sees Windstärken über <input class="mini-input" maxlength="3" type="number" min="0" max="300" step="1" [(ngModel)]="katWarning.expectedWind" name="expectedWind"> km/h erwartet.
+      Derzeit beträgt die Windstärke <input class="mini-input" type="number" [(ngModel)]="katWarning.currentWind" maxlength="3" min="0" max="300" step=".1" name="currentWind"> km/h.
+  </div>
+</div>
+<div class="row">
+  <div class="col-2">Location</div><div class="col-6">
+  <select [(ngModel)]="katWarning.locationId" id="locationId">
+    <option *ngFor="let location of availableLocations" [ngValue]="location">
+      {{ location }}
+    </option>
+  </select>
+</div>
+</div>
+
+<div class="row">
+  <div class="col-6 offset-2">
+    <button class="btn btn-default" *ngIf="katWarning.id" (click)="update()">Update</button>
+    <button class="btn btn-default" *ngIf="katWarning.id" (click)="cancel()">Cancel</button>
+    <button class="btn btn-default" *ngIf="!katWarning.id" (click)="create()">Create</button>
+    <button class="btn btn-default" routerLink="/list">Close</button>
+  </div>
+</div>
+

@@ -1,4 +1,4 @@
-package com.fiftyoneapps.irongrp.service.model;
+package com.fiftyoneapps.irongrp.service.hero.model;
 
 import org.springframework.data.repository.CrudRepository;
 

@@ -1,12 +1,16 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
+import com.fiftyoneapps.irongrp.service.user.model.User;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NodeEntity
-public class Lession {
+public class Course {
 
     @Id
     @GeneratedValue
@@ -14,18 +18,28 @@ public class Lession {
 
     private String name;
 
-    @Relationship
-    private Lession previousLesson;
+    @Relationship(type = "previous")
+    private Course previousCourse;
 
-    @Relationship
-    private Lession nextLession;
+    @Relationship(type = "next")
+    private Course nextCourse;
+
+    @Relationship(type = "contains")
+    private List<Chapter> chapters;
+
+    public List<Chapter> getChapters() {
+        if (chapters == null) {
+            chapters = new ArrayList<>();
+        }
+        return chapters;
+    }
+
+    public void setChapters(List<Chapter> chapters) {
+        this.chapters = chapters;
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -36,19 +50,19 @@ public class Lession {
         this.name = name;
     }
 
-    public Lession getPreviousLesson() {
-        return previousLesson;
+    public Course getPreviousCourse() {
+        return previousCourse;
     }
 
-    public void setPreviousLesson(Lession previousLesson) {
-        this.previousLesson = previousLesson;
+    public void setPreviousCourse(Course previousCourse) {
+        this.previousCourse = previousCourse;
     }
 
-    public Lession getNextLession() {
-        return nextLession;
+    public Course getNextCourse() {
+        return nextCourse;
     }
 
-    public void setNextLession(Lession nextLession) {
-        this.nextLession = nextLession;
+    public void setNextCourse(Course nextCourse) {
+        this.nextCourse = nextCourse;
     }
 }

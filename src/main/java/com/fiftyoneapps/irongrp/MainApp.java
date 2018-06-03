@@ -8,9 +8,9 @@ import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableNeo4jRepositories
-public class DemoApplication {
+public class MainApp {
 
 	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
+		SpringApplication.run(MainApp.class, args);
 	}
 }

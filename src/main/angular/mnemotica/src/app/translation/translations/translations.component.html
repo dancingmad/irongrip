@@ -1,0 +1,6 @@
+<p *ngIf="user">
+  Welcome {{user.username}}!
+</p>
+<p *ngIf="!user">
+  Not logged in! Please use <a routerLink="login">Login</a>
+</p>

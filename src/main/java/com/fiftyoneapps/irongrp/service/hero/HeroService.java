@@ -1,10 +1,8 @@
-package com.fiftyoneapps.irongrp.service;
+package com.fiftyoneapps.irongrp.service.hero;
 
-import com.fiftyoneapps.irongrp.api.HeroResource;
-import com.fiftyoneapps.irongrp.service.exception.GeneralException;
 import com.fiftyoneapps.irongrp.service.exception.ResourceMissingException;
-import com.fiftyoneapps.irongrp.service.model.Hero;
-import com.fiftyoneapps.irongrp.service.model.HeroRepository;
+import com.fiftyoneapps.irongrp.service.hero.model.Hero;
+import com.fiftyoneapps.irongrp.service.hero.model.HeroRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
