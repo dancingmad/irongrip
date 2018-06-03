@@ -63,6 +63,7 @@ export class KatComponent implements OnInit {
 
   cancel() {
     this.katwarnService.deleteKatWarning(this.katWarning);
+    this.location.back();
   }
 
   create() {

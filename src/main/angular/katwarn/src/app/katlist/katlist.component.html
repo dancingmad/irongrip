@@ -1,8 +1,8 @@
-<div class="list-group">
+<div class="list-group" *ngIf="katWarnings">
       <button type="button" routerLink="/kat/{{katwarn.id}}" *ngFor="let katwarn of katWarnings" class="list-group-item">
         {{parseWarning(katwarn)}}
       </button>
-     <button type="button" *ngIf="!katWarnings" class="list-group-item disabled" href="#">Keine aktuellen Warnungen</button>
+     <button type="button" *ngIf="katWarnings.length == 0" class="list-group-item disabled" href="#">Keine aktuellen Warnungen</button>
      <button type="button" routerLink="/kat/new" class="list-group-item">Neue Unwetterwarnung...</button>
 </div>
 

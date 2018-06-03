@@ -297,6 +297,7 @@ var KatComponent = /** @class */ (function () {
     };
     KatComponent.prototype.cancel = function () {
         this.katwarnService.deleteKatWarning(this.katWarning);
+        this.location.back();
     };
     KatComponent.prototype.create = function () {
         var _this = this;
@@ -337,7 +338,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"list-group\">\n      <button type=\"button\" routerLink=\"/kat/{{katwarn.id}}\" *ngFor=\"let katwarn of katWarnings\" class=\"list-group-item\">\n        {{parseWarning(katwarn)}}\n      </button>\n     <button type=\"button\" *ngIf=\"!katWarnings\" class=\"list-group-item disabled\" href=\"#\">Keine aktuellen Warnungen</button>\n     <button type=\"button\" routerLink=\"/kat/new\" class=\"list-group-item\">Neue Unwetterwarnung...</button>\n</div>\n\n"
+module.exports = "<div class=\"list-group\" *ngIf=\"katWarnings\">\n      <button type=\"button\" routerLink=\"/kat/{{katwarn.id}}\" *ngFor=\"let katwarn of katWarnings\" class=\"list-group-item\">\n        {{parseWarning(katwarn)}}\n      </button>\n     <button type=\"button\" *ngIf=\"katWarnings.length == 0\" class=\"list-group-item disabled\" href=\"#\">Keine aktuellen Warnungen</button>\n     <button type=\"button\" routerLink=\"/kat/new\" class=\"list-group-item\">Neue Unwetterwarnung...</button>\n</div>\n\n"
 
 /***/ }),
 
