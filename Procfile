@@ -1,1 +1,1 @@
-web java -Dspring.data.neo4j.password=${GRAPHENEDB_BOLT_PASSWORD} -Dspring.data.neo4j.username=${GRAPHENEDB_BOLT_USER} -Dspring.data.neo4j.url=${GRAPHENEDB_BOLT_URL} -Dserver.port=$PORT $JAVA_OPTS -jar target/irongrp-0.0.1-SNAPSHOT.jar
+web: java -Dspring.data.neo4j.password=${GRAPHENEDB_BOLT_PASSWORD} -Dspring.data.neo4j.username=${GRAPHENEDB_BOLT_USER} -Dspring.data.neo4j.url=${GRAPHENEDB_BOLT_URL} -Dserver.port=$PORT $JAVA_OPTS -jar target/irongrp-0.0.1-SNAPSHOT.jar
