@@ -2,7 +2,10 @@ package com.fiftyoneapps.irongrp.api.katwarn;
 
 import com.fiftyoneapps.irongrp.service.katwarning.KatWarning;
 import com.fiftyoneapps.irongrp.service.katwarning.KatWarningRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,8 +16,18 @@ import java.util.List;
 @RequestMapping("/api/katwarn")
 public class KatWarnResource {
 
-    @Autowired
+    private Logger LOGGER = LoggerFactory.getLogger(KatWarnResource.class);
     private KatWarningRepository katWarningRepository;
+
+
+    @Autowired
+    private KatWarnResource(KatWarningRepository katWarningRepository,
+                            @Value("${spring.data.neo4j.username}") String username,
+                            @Value("${spring.data.neo4j.password}") String password,
+                            @Value("${spring.data.neo4j.uri}") String uri) {
+        this.katWarningRepository = katWarningRepository;
+        LOGGER.info("Starting with user {} password {} and uri {} ",username,password,uri);
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public List<KatWarning> list() {
