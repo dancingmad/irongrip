@@ -6,12 +6,11 @@ import {KatlistComponent} from '../katlist/katlist.component';
 
 const routes: Routes = [
   { path: 'kat/:id' , component: KatComponent },
-  { path: 'list' , component: KatlistComponent },
-  { path: '', redirectTo: '/list', pathMatch: 'full'}
+  { path: '' , component: KatlistComponent }
 ]
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes,{useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

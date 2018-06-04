@@ -49,15 +49,14 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 var routes = [
     { path: 'kat/:id', component: _kat_kat_component__WEBPACK_IMPORTED_MODULE_2__["KatComponent"] },
-    { path: 'list', component: _katlist_katlist_component__WEBPACK_IMPORTED_MODULE_3__["KatlistComponent"] },
-    { path: '', redirectTo: '/list', pathMatch: 'full' }
+    { path: '', component: _katlist_katlist_component__WEBPACK_IMPORTED_MODULE_3__["KatlistComponent"] }
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
     }
     AppRoutingModule = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"])({
-            imports: [_angular_router__WEBPACK_IMPORTED_MODULE_1__["RouterModule"].forRoot(routes)],
+            imports: [_angular_router__WEBPACK_IMPORTED_MODULE_1__["RouterModule"].forRoot(routes, { useHash: true })],
             exports: [_angular_router__WEBPACK_IMPORTED_MODULE_1__["RouterModule"]]
         })
     ], AppRoutingModule);
@@ -216,7 +215,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div class=\"col-2\">ID</div><div class=\"col-6\">{{katWarning.id}}</div>\n</div>\n<div class=\"row\">\n  <div class=\"col-2\">Typ</div><div class=\"col-6\">\n    <select [(ngModel)]=\"katWarning.type\" id=\"type\">\n      <option value=\"\">None</option>\n      <option value=\"default\">Default</option>\n    </select>\n  </div>\n</div>\n<div class=\"row\" *ngIf=\"katWarning.type=='default'\">\n  <div class=\"col-9 offset-2\">\n      In der Zeit zwischen <input class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.fromTime\" maxlength=\"2\" name=\"fromTime\"> und <input maxlength=\"2\" class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.toTime\" name=\"toTime\"> Uhr\n      werden heute im südlichen Teil des Neusiedler Sees Windstärken über <input class=\"mini-input\" maxlength=\"3\" type=\"number\" min=\"0\" max=\"300\" step=\"1\" [(ngModel)]=\"katWarning.expectedWind\" name=\"expectedWind\"> km/h erwartet.\n      Derzeit beträgt die Windstärke <input class=\"mini-input\" type=\"number\" [(ngModel)]=\"katWarning.currentWind\" maxlength=\"3\" min=\"0\" max=\"300\" step=\".1\" name=\"currentWind\"> km/h.\n  </div>\n</div>\n<div class=\"row\">\n  <div class=\"col-2\">Location</div><div class=\"col-6\">\n  <select [(ngModel)]=\"katWarning.locationId\" id=\"locationId\">\n    <option *ngFor=\"let location of availableLocations\" [ngValue]=\"location\">\n      {{ location }}\n    </option>\n  </select>\n</div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-6 offset-2\">\n    <button class=\"btn btn-default\" *ngIf=\"katWarning.id\" (click)=\"update()\">Update</button>\n    <button class=\"btn btn-default\" *ngIf=\"katWarning.id\" (click)=\"cancel()\">Cancel</button>\n    <button class=\"btn btn-default\" *ngIf=\"!katWarning.id\" (click)=\"create()\">Create</button>\n    <button class=\"btn btn-default\" routerLink=\"/list\">Close</button>\n  </div>\n</div>\n\n"
+module.exports = "<div class=\"row\">\n  <div class=\"col-2\">ID</div><div class=\"col-6\">{{katWarning.id}}</div>\n</div>\n<div class=\"row\">\n  <div class=\"col-2\">Typ</div><div class=\"col-6\">\n    <select [(ngModel)]=\"katWarning.type\" id=\"type\">\n      <option value=\"\">None</option>\n      <option value=\"default\">Default</option>\n    </select>\n  </div>\n</div>\n<div class=\"row\" *ngIf=\"katWarning.type=='default'\">\n  <div class=\"col-9 offset-2\">\n      In der Zeit zwischen <input class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.fromTime\" maxlength=\"2\" name=\"fromTime\"> und <input maxlength=\"2\" class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.toTime\" name=\"toTime\"> Uhr\n      werden heute im südlichen Teil des Neusiedler Sees Windstärken über <input class=\"mini-input\" maxlength=\"3\" type=\"number\" min=\"0\" max=\"300\" step=\"1\" [(ngModel)]=\"katWarning.expectedWind\" name=\"expectedWind\"> km/h erwartet.\n      Derzeit beträgt die Windstärke <input class=\"mini-input\" type=\"number\" [(ngModel)]=\"katWarning.currentWind\" maxlength=\"3\" min=\"0\" max=\"300\" step=\".1\" name=\"currentWind\"> km/h.\n  </div>\n</div>\n<div class=\"row\">\n  <div class=\"col-2\">Location</div><div class=\"col-6\">\n  <select [(ngModel)]=\"katWarning.locationId\" id=\"locationId\">\n    <option *ngFor=\"let location of availableLocations\" [ngValue]=\"location\">\n      {{ location }}\n    </option>\n  </select>\n</div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-6 offset-2\">\n    <button class=\"btn btn-default\" *ngIf=\"katWarning.id\" (click)=\"update()\">Update</button>\n    <button class=\"btn btn-default\" *ngIf=\"katWarning.id\" (click)=\"cancel()\">Cancel</button>\n    <button class=\"btn btn-default\" *ngIf=\"!katWarning.id\" (click)=\"create()\">Create</button>\n    <button class=\"btn btn-default\" routerLink=\"/\">Close</button>\n  </div>\n</div>\n\n"
 
 /***/ }),
 
