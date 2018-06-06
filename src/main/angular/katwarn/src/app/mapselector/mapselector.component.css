@@ -1,0 +1,23 @@
+.katmap {
+  background-image: url('../../assets/images/Neusiedlersee.png');
+  width: 480px;
+  height: 570px;
+}
+
+.location {
+  fill:palegreen;
+  stroke: black;
+  stroke-width: 1px;
+}
+
+.location:hover {
+  stroke-width: 3px;
+}
+
+.location.active {
+  fill:darkred;
+}
+
+.location.selected {
+  stroke-width: 3px;
+}

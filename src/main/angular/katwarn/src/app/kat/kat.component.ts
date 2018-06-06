@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Component, OnChanges, OnInit} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {KatwarnService} from '../service/katwarn.service';
 import {KatWarning} from '../service/katwarning';
+import {KatLocation} from '../service/katlocation';
+import {KatLocationService} from '../service/kat-location.service';
 
 @Component({
   selector: 'app-kat',
@@ -11,35 +13,48 @@ import {KatWarning} from '../service/katwarning';
 })
 export class KatComponent implements OnInit {
 
-  locations: string[] = [
-    'Mörbisch',
-    'Rust',
-    'Eisenstadt'
-  ];
+  locations: KatLocation[];
 
   katWarning: KatWarning = new KatWarning();
-  availableLocations: string[] = [];
+  availableLocations: KatLocation[] = [];
 
-  constructor(private route: ActivatedRoute,
+  constructor(private router: Router,
+              private route: ActivatedRoute,
               private location: Location,
-              private katwarnService: KatwarnService) {
+              private katwarnService: KatwarnService,
+              private katLocationService: KatLocationService) {
   }
 
   ngOnInit() {
+    this.getLocations();
     this.getKatWarning();
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.getKatWarning();
+      }
+    });
+
+  }
+
+  getLocations() {
+    this.locations = this.katLocationService.getLocations();
   }
 
   getKatWarning() {
-    const param = this.route.snapshot.paramMap.get('id');
-    const id = +param;
-    if (id >= 0) {
-      this.katwarnService.getKatWarning(id)
+    const locationId = this.route.snapshot.paramMap.get('locationId');
+    this.katWarning.locationId = locationId;
+    if (locationId === 'new') {
+      this.getAvailableLocations('');
+    } else {
+      this.katwarnService.getKatWarning(locationId)
         .subscribe(katwarn => {
-          this.katWarning = katwarn;
+          if (katwarn) {
+            this.katWarning = katwarn;
+          } else {
+            this.katWarning = {locationId: locationId} as KatWarning;
+          }
           this.getAvailableLocations(this.katWarning.locationId);
         });
-    } else {
-      this.getAvailableLocations('');
     }
   }
 
@@ -49,7 +64,7 @@ export class KatComponent implements OnInit {
         const existingLocations = katWarnings.map(warn => warn.locationId);
         this.availableLocations = [];
         this.locations.forEach(location => {
-           if (existingLocations.indexOf(location) < 0 || location === selectedLocationId) {
+           if (existingLocations.indexOf(location.locationId) < 0 || location.locationId === selectedLocationId) {
             this.availableLocations.push(location);
           }
         });

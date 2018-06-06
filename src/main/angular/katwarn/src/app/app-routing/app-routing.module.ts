@@ -5,7 +5,7 @@ import {KatlistComponent} from '../katlist/katlist.component';
 
 
 const routes: Routes = [
-  { path: 'kat/:id' , component: KatComponent },
+  { path: 'kat/:locationId' , component: KatComponent },
   { path: '' , component: KatlistComponent }
 ]
 

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,28 +37,41 @@ public class KatWarnResource {
         return katWarnings;
     }
 
-    @RequestMapping(value = "/{katId}", method = RequestMethod.GET)
-    public KatWarning detail(@PathVariable Long katId) {
-        return katWarningRepository.findById(katId).get();
+
+    @RequestMapping(value = "/{locationId}", method = RequestMethod.GET)
+    public KatWarning detail(@PathVariable String locationId) {
+        List<KatWarning> warnings = katWarningRepository.findActiveByLocationId(locationId);
+        if (CollectionUtils.isEmpty(warnings)) {
+            return null;
+        }
+        return warnings.get(0);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public KatWarning add(@Valid @RequestBody KatWarning katWarning) {
+        List<KatWarning> warnings = katWarningRepository.findActiveByLocationId(katWarning.getLocationId());
+        if (!CollectionUtils.isEmpty(warnings)) {
+            throw new RuntimeException("Already active warning for this location");
+        }
         // save the new Warning
         katWarningRepository.save(katWarning);
         return katWarning;
     }
 
-    @RequestMapping(value = "/{katId}", method = RequestMethod.PUT)
-    public void edit(@PathVariable Long katId, @Valid @RequestBody KatWarning katWarning) {
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    public void edit(@Valid @RequestBody KatWarning katWarning) {
+        KatWarning currentWarning = katWarningRepository.findById(katWarning.getId()).get();
+        // prevent switching locations
+        katWarning.setLocationId(currentWarning.getLocationId());
         // update the warning
         katWarningRepository.save(katWarning);
     }
 
-    @RequestMapping(value = "/{katId}", method = RequestMethod.DELETE)
-    public void edit(@PathVariable Long katId) {
-        // update the warning
-        katWarningRepository.deleteById(katId);
+    @RequestMapping(value = "/{locationId}", method = RequestMethod.DELETE)
+    public void edit(@PathVariable String locationId) {
+        List<KatWarning> warnings = katWarningRepository.findActiveByLocationId(locationId);
+        // delete all active warnings for location
+        warnings.forEach(katWarningRepository::delete);
     }
 
 

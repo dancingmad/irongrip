@@ -19,15 +19,14 @@ export class KatwarnService {
     return this.http.get<KatWarning[]>(this.katwarnUrl);
   }
 
-  getKatWarning(id: number): Observable<KatWarning> {
-    const detailUrl = `${this.katwarnUrl}${id}`;
+  getKatWarning(locationId: string): Observable<KatWarning> {
+    const detailUrl = `${this.katwarnUrl}${locationId}`;
     return this.http.get<KatWarning>(detailUrl);
   }
 
   updateKatWarning(katWarning: KatWarning) {
      // do update
-    const warningUrl = `${this.katwarnUrl}${katWarning.id}`;
-    this.http.put<KatWarning>(warningUrl, katWarning).subscribe();
+    this.http.put<KatWarning>(this.katwarnUrl, katWarning).subscribe();
   }
 
   createKatWarning(katWarning: KatWarning): Observable<KatWarning> {
@@ -36,7 +35,7 @@ export class KatwarnService {
   }
 
   deleteKatWarning(katWarning: KatWarning) {
-    const detailUrl = `${this.katwarnUrl}${katWarning.id}`;
+    const detailUrl = `${this.katwarnUrl}${katWarning.locationId}`;
     this.http.delete<KatWarning>(detailUrl).subscribe();
   }
 }

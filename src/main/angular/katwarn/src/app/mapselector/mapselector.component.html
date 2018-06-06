@@ -1,3 +1,8 @@
 <div class="row">
-  <div class="col-11 offset-1">Map is here</div>
+  <div class="col-12 text-center"><svg class="katmap">
+    <circle *ngFor="let loc of locations" [attr.cx]="loc.x" [attr.cy]="loc.y" r="10"
+            [ngClass]="{'location':true, 'active':loc.active, 'selected':loc.selected}"
+            (click)="openLocation(loc)" ></circle>
+
+  </svg> </div>
 </div>

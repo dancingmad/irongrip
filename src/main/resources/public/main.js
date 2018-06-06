@@ -48,7 +48,7 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 var routes = [
-    { path: 'kat/:id', component: _kat_kat_component__WEBPACK_IMPORTED_MODULE_2__["KatComponent"] },
+    { path: 'kat/:locationId', component: _kat_kat_component__WEBPACK_IMPORTED_MODULE_2__["KatComponent"] },
     { path: '', component: _katlist_katlist_component__WEBPACK_IMPORTED_MODULE_3__["KatlistComponent"] }
 ];
 var AppRoutingModule = /** @class */ (function () {
@@ -215,7 +215,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div class=\"col-2\">ID</div><div class=\"col-6\">{{katWarning.id}}</div>\n</div>\n<div class=\"row\">\n  <div class=\"col-2\">Typ</div><div class=\"col-6\">\n    <select [(ngModel)]=\"katWarning.type\" id=\"type\">\n      <option value=\"\">None</option>\n      <option value=\"default\">Default</option>\n    </select>\n  </div>\n</div>\n<div class=\"row\" *ngIf=\"katWarning.type=='default'\">\n  <div class=\"col-9 offset-2\">\n      In der Zeit zwischen <input class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.fromTime\" maxlength=\"2\" name=\"fromTime\"> und <input maxlength=\"2\" class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.toTime\" name=\"toTime\"> Uhr\n      werden heute im südlichen Teil des Neusiedler Sees Windstärken über <input class=\"mini-input\" maxlength=\"3\" type=\"number\" min=\"0\" max=\"300\" step=\"1\" [(ngModel)]=\"katWarning.expectedWind\" name=\"expectedWind\"> km/h erwartet.\n      Derzeit beträgt die Windstärke <input class=\"mini-input\" type=\"number\" [(ngModel)]=\"katWarning.currentWind\" maxlength=\"3\" min=\"0\" max=\"300\" step=\".1\" name=\"currentWind\"> km/h.\n  </div>\n</div>\n<div class=\"row\">\n  <div class=\"col-2\">Location</div><div class=\"col-6\">\n  <select [(ngModel)]=\"katWarning.locationId\" id=\"locationId\">\n    <option *ngFor=\"let location of availableLocations\" [ngValue]=\"location\">\n      {{ location }}\n    </option>\n  </select>\n</div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-6 offset-2\">\n    <button class=\"btn btn-default\" *ngIf=\"katWarning.id\" (click)=\"update()\">Update</button>\n    <button class=\"btn btn-default\" *ngIf=\"katWarning.id\" (click)=\"cancel()\">Cancel</button>\n    <button class=\"btn btn-default\" *ngIf=\"!katWarning.id\" (click)=\"create()\">Create</button>\n    <button class=\"btn btn-default\" routerLink=\"/\">Close</button>\n  </div>\n</div>\n\n"
+module.exports = "<div class=\"row\">\n  <div class=\"col-2\">ID</div><div class=\"col-6\">{{katWarning.id}}</div>\n</div>\n<div class=\"row\">\n  <div class=\"col-2\">Typ</div><div class=\"col-6\">\n    <select [(ngModel)]=\"katWarning.type\" id=\"type\">\n      <option value=\"\">None</option>\n      <option value=\"default\">Default</option>\n    </select>\n  </div>\n</div>\n<div class=\"row\" *ngIf=\"katWarning.type=='default'\">\n  <div class=\"col-9 offset-2\">\n      In der Zeit zwischen <input class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.fromTime\" maxlength=\"2\" name=\"fromTime\"> und <input maxlength=\"2\" class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.toTime\" name=\"toTime\"> Uhr\n      werden heute im südlichen Teil des Neusiedler Sees Windstärken über <input class=\"mini-input\" maxlength=\"3\" type=\"number\" min=\"0\" max=\"300\" step=\"1\" [(ngModel)]=\"katWarning.expectedWind\" name=\"expectedWind\"> km/h erwartet.\n      Derzeit beträgt die Windstärke <input class=\"mini-input\" type=\"number\" [(ngModel)]=\"katWarning.currentWind\" maxlength=\"3\" min=\"0\" max=\"300\" step=\".1\" name=\"currentWind\"> km/h.\n  </div>\n</div>\n<div class=\"row\">\n  <div class=\"col-2\">Location</div>\n  <div class=\"col-6\">\n    <select [(ngModel)]=\"katWarning.locationId\" id=\"locationId\">\n      <option *ngFor=\"let location of availableLocations\" [ngValue]=\"location.locationId\">\n        {{ location.name }}\n      </option>\n    </select>\n  </div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-6 offset-2\">\n    <button class=\"btn btn-default\" *ngIf=\"katWarning.id\" (click)=\"update()\">Update</button>\n    <button class=\"btn btn-default\" *ngIf=\"katWarning.id\" (click)=\"cancel()\">Cancel</button>\n    <button class=\"btn btn-default\" *ngIf=\"!katWarning.id\" (click)=\"create()\">Create</button>\n    <button class=\"btn btn-default\" routerLink=\"/\">Close</button>\n  </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -234,6 +234,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _service_katwarn_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../service/katwarn.service */ "./src/app/service/katwarn.service.ts");
 /* harmony import */ var _service_katwarning__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../service/katwarning */ "./src/app/service/katwarning.ts");
+/* harmony import */ var _service_kat_location_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../service/kat-location.service */ "./src/app/service/kat-location.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -248,35 +249,48 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var KatComponent = /** @class */ (function () {
-    function KatComponent(route, location, katwarnService) {
+    function KatComponent(router, route, location, katwarnService, katLocationService) {
+        this.router = router;
         this.route = route;
         this.location = location;
         this.katwarnService = katwarnService;
-        this.locations = [
-            'Mörbisch',
-            'Rust',
-            'Eisenstadt'
-        ];
+        this.katLocationService = katLocationService;
         this.katWarning = new _service_katwarning__WEBPACK_IMPORTED_MODULE_4__["KatWarning"]();
         this.availableLocations = [];
     }
     KatComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.getLocations();
         this.getKatWarning();
+        this.router.events.subscribe(function (event) {
+            if (event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_1__["NavigationEnd"]) {
+                _this.getKatWarning();
+            }
+        });
+    };
+    KatComponent.prototype.getLocations = function () {
+        this.locations = this.katLocationService.getLocations();
     };
     KatComponent.prototype.getKatWarning = function () {
         var _this = this;
-        var param = this.route.snapshot.paramMap.get('id');
-        var id = +param;
-        if (id >= 0) {
-            this.katwarnService.getKatWarning(id)
-                .subscribe(function (katwarn) {
-                _this.katWarning = katwarn;
-                _this.getAvailableLocations(_this.katWarning.locationId);
-            });
+        var locationId = this.route.snapshot.paramMap.get('locationId');
+        this.katWarning.locationId = locationId;
+        if (locationId === 'new') {
+            this.getAvailableLocations('');
         }
         else {
-            this.getAvailableLocations('');
+            this.katwarnService.getKatWarning(locationId)
+                .subscribe(function (katwarn) {
+                if (katwarn) {
+                    _this.katWarning = katwarn;
+                }
+                else {
+                    _this.katWarning = { locationId: locationId };
+                }
+                _this.getAvailableLocations(_this.katWarning.locationId);
+            });
         }
     };
     KatComponent.prototype.getAvailableLocations = function (selectedLocationId) {
@@ -285,7 +299,7 @@ var KatComponent = /** @class */ (function () {
             var existingLocations = katWarnings.map(function (warn) { return warn.locationId; });
             _this.availableLocations = [];
             _this.locations.forEach(function (location) {
-                if (existingLocations.indexOf(location) < 0 || location === selectedLocationId) {
+                if (existingLocations.indexOf(location.locationId) < 0 || location.locationId === selectedLocationId) {
                     _this.availableLocations.push(location);
                 }
             });
@@ -308,9 +322,11 @@ var KatComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./kat.component.html */ "./src/app/kat/kat.component.html"),
             styles: [__webpack_require__(/*! ./kat.component.css */ "./src/app/kat/kat.component.css")]
         }),
-        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_1__["Router"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_1__["ActivatedRoute"],
             _angular_common__WEBPACK_IMPORTED_MODULE_2__["Location"],
-            _service_katwarn_service__WEBPACK_IMPORTED_MODULE_3__["KatwarnService"]])
+            _service_katwarn_service__WEBPACK_IMPORTED_MODULE_3__["KatwarnService"],
+            _service_kat_location_service__WEBPACK_IMPORTED_MODULE_5__["KatLocationService"]])
     ], KatComponent);
     return KatComponent;
 }());
@@ -337,7 +353,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"list-group\" *ngIf=\"katWarnings\">\n      <button type=\"button\" routerLink=\"/kat/{{katwarn.id}}\" *ngFor=\"let katwarn of katWarnings\" class=\"list-group-item\">\n        {{parseWarning(katwarn)}}\n      </button>\n     <button type=\"button\" *ngIf=\"katWarnings.length == 0\" class=\"list-group-item disabled\" href=\"#\">Keine aktuellen Warnungen</button>\n     <button type=\"button\" routerLink=\"/kat/new\" class=\"list-group-item\">Neue Unwetterwarnung...</button>\n</div>\n\n"
+module.exports = "<div class=\"list-group\" *ngIf=\"katWarnings\">\n      <button type=\"button\" routerLink=\"/kat/{{katwarn.locationId}}\" *ngFor=\"let katwarn of katWarnings\" class=\"list-group-item\">\n        {{parseWarning(katwarn)}}\n      </button>\n     <button type=\"button\" *ngIf=\"katWarnings.length == 0\" class=\"list-group-item disabled\" href=\"#\">Keine aktuellen Warnungen</button>\n     <button type=\"button\" routerLink=\"/kat/new\" class=\"list-group-item\">Neue Unwetterwarnung...</button>\n</div>\n\n"
 
 /***/ }),
 
@@ -407,7 +423,7 @@ var KatlistComponent = /** @class */ (function () {
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".katmap {\n  background-image: url('Neusiedlersee.png');\n  width: 480px;\n  height: 570px;\n}\n\n.location {\n  fill:palegreen;\n  stroke: black;\n  stroke-width: 1px;\n}\n\n.location:hover {\n  stroke-width: 3px;\n}\n\n.location.active {\n  fill:darkred;\n}\n\n.location.selected {\n  stroke-width: 3px;\n}\n"
 
 /***/ }),
 
@@ -418,7 +434,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div class=\"col-11 offset-1\">Map is here</div>\n</div>\n"
+module.exports = "<div class=\"row\">\n  <div class=\"col-12 text-center\"><svg class=\"katmap\">\n    <circle *ngFor=\"let loc of locations\" [attr.cx]=\"loc.x\" [attr.cy]=\"loc.y\" r=\"10\"\n            [ngClass]=\"{'location':true, 'active':loc.active, 'selected':loc.selected}\"\n            (click)=\"openLocation(loc)\" ></circle>\n\n  </svg> </div>\n</div>\n"
 
 /***/ }),
 
@@ -433,6 +449,10 @@ module.exports = "<div class=\"row\">\n  <div class=\"col-11 offset-1\">Map is h
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MapselectorComponent", function() { return MapselectorComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _service_katwarn_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../service/katwarn.service */ "./src/app/service/katwarn.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
+/* harmony import */ var _service_kat_location_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../service/kat-location.service */ "./src/app/service/kat-location.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -443,10 +463,41 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
+
+
 var MapselectorComponent = /** @class */ (function () {
-    function MapselectorComponent() {
+    function MapselectorComponent(route, router, location, katLocationService, katWarnService) {
+        this.route = route;
+        this.router = router;
+        this.location = location;
+        this.katLocationService = katLocationService;
+        this.katWarnService = katWarnService;
     }
     MapselectorComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.locations = this.katLocationService.getLocations();
+        // get all active warnings to add colors
+        // check route to see which is
+        this.locations.forEach(function (loc) { return loc.active = false; });
+        this.router.events.subscribe(function (event) {
+            if (event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_2__["NavigationEnd"]) {
+                _this.updateLocations();
+            }
+        });
+    };
+    MapselectorComponent.prototype.updateLocations = function () {
+        var _this = this;
+        this.katWarnService.getKatWarnings().subscribe(function (warnings) {
+            var warnLocations = warnings.map(function (warn) { return warn.locationId; });
+            _this.locations.forEach(function (loc) {
+                loc.active = (warnLocations.indexOf(loc.locationId) > -1);
+            });
+        });
+    };
+    MapselectorComponent.prototype.openLocation = function (loc) {
+        this.router.navigate(['/kat', loc.locationId]);
     };
     MapselectorComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -454,9 +505,66 @@ var MapselectorComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./mapselector.component.html */ "./src/app/mapselector/mapselector.component.html"),
             styles: [__webpack_require__(/*! ./mapselector.component.css */ "./src/app/mapselector/mapselector.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _angular_common__WEBPACK_IMPORTED_MODULE_3__["Location"],
+            _service_kat_location_service__WEBPACK_IMPORTED_MODULE_4__["KatLocationService"],
+            _service_katwarn_service__WEBPACK_IMPORTED_MODULE_1__["KatwarnService"]])
     ], MapselectorComponent);
     return MapselectorComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/service/kat-location.service.ts":
+/*!*************************************************!*\
+  !*** ./src/app/service/kat-location.service.ts ***!
+  \*************************************************/
+/*! exports provided: KatLocationService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KatLocationService", function() { return KatLocationService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var KatLocationService = /** @class */ (function () {
+    function KatLocationService() {
+        this.locations = [
+            { x: 308, y: 45, name: 'Neusiedl', locationId: 'Neusiedl' },
+            { x: 330, y: 88, name: 'Weiden', locationId: 'Weiden' },
+            { x: 297, y: 197, name: 'Podersdorf', locationId: 'Podersdorf' },
+            { x: 217, y: 316, name: 'Illmitz-Hölle', locationId: 'Illmitz-Hölle' },
+            { x: 187, y: 402, name: 'Illmitz', locationId: 'Illmitz' },
+            { x: 100, y: 489, name: 'Fertörakos', locationId: 'Fertörakos' },
+            { x: 87, y: 374, name: 'Mörbisch', locationId: 'Mörbisch' },
+            { x: 110, y: 318, name: 'Rust', locationId: 'Rust' },
+            { x: 134, y: 230, name: 'Oggau', locationId: 'Oggau' },
+            { x: 173, y: 97, name: 'Purbach', locationId: 'Purbach' },
+            { x: 200, y: 68, name: 'Breitenbrunn', locationId: 'Breitenbrunn' }
+        ];
+    }
+    KatLocationService.prototype.getLocations = function () {
+        return this.locations;
+    };
+    KatLocationService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        }),
+        __metadata("design:paramtypes", [])
+    ], KatLocationService);
+    return KatLocationService;
 }());
 
 
@@ -497,21 +605,20 @@ var KatwarnService = /** @class */ (function () {
     KatwarnService.prototype.getKatWarnings = function () {
         return this.http.get(this.katwarnUrl);
     };
-    KatwarnService.prototype.getKatWarning = function (id) {
-        var detailUrl = "" + this.katwarnUrl + id;
+    KatwarnService.prototype.getKatWarning = function (locationId) {
+        var detailUrl = "" + this.katwarnUrl + locationId;
         return this.http.get(detailUrl);
     };
     KatwarnService.prototype.updateKatWarning = function (katWarning) {
         // do update
-        var warningUrl = "" + this.katwarnUrl + katWarning.id;
-        this.http.put(warningUrl, katWarning).subscribe();
+        this.http.put(this.katwarnUrl, katWarning).subscribe();
     };
     KatwarnService.prototype.createKatWarning = function (katWarning) {
         var detailUrl = "" + this.katwarnUrl;
         return this.http.post(this.katwarnUrl, katWarning);
     };
     KatwarnService.prototype.deleteKatWarning = function (katWarning) {
-        var detailUrl = "" + this.katwarnUrl + katWarning.id;
+        var detailUrl = "" + this.katwarnUrl + katWarning.locationId;
         this.http.delete(detailUrl).subscribe();
     };
     KatwarnService = __decorate([
