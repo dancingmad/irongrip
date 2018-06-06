@@ -241,7 +241,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<!-- <div class=\"row\">\n  <div class=\"col-2\">ID</div><div class=\"col-6\">{{katWarning.id}}</div>\n</div> -->\n<div class=\"row\">\n  <div class=\"col-2\">Standort:</div>\n  <div class=\"col-6\" *ngIf=\"newMode\">\n    <select [(ngModel)]=\"katWarning.locationId\" id=\"locationId\">\n      <option *ngFor=\"let location of availableLocations\" [ngValue]=\"location.locationId\">\n        {{ location.name }}\n      </option>\n    </select>\n  </div>\n  <div class=\"col-6\" *ngIf=\"!newMode\">\n    {{ katWarning.locationId }}\n  </div>\n</div>\n<div class=\"row mt-3\">\n  <div class=\"col-9 offset-2\">\n      In der Zeit zwischen <input class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.fromTime\" maxlength=\"2\" name=\"fromTime\"> und <input maxlength=\"2\" class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.toTime\" name=\"toTime\"> Uhr\n      werden heute im südlichen Teil des Neusiedler Sees Windstärken über <input class=\"mini-input\" maxlength=\"3\" type=\"number\" min=\"0\" max=\"300\" step=\"1\" [(ngModel)]=\"katWarning.expectedWind\" name=\"expectedWind\"> km/h erwartet.\n      Derzeit beträgt die Windstärke <input class=\"mini-input\" type=\"number\" [(ngModel)]=\"katWarning.currentWind\" maxlength=\"3\" min=\"0\" max=\"300\" step=\".1\" name=\"currentWind\"> km/h.\n  </div>\n</div>\n<div class=\"row mt-3\">\n  <div class=\"col-10 offset-2\">\n    <button type=\"button\" class=\"btn btn-outline-secondary\" *ngIf=\"katWarning.id != null\" (click)=\"update()\" [disabled]=\"progress\">Aktualisieren der Warnung</button>\n    <button type=\"button\" class=\"btn btn-outline-secondary\" *ngIf=\"katWarning.id != null\" (click)=\"cancel()\" [disabled]=\"progress\">Warnung Aufheben</button>\n    <button type=\"button\" class=\"btn btn-outline-secondary\" *ngIf=\"katWarning.id == null\" (click)=\"create()\" [disabled]=\"progress\">Neue Warnung erstellen</button>\n    <button type=\"button\" class=\"btn btn-outline-secondary\" routerLink=\"/\">Schliessen</button>\n  </div>\n</div>\n<div class=\"row mt-3\" *ngIf=\"this.message\">\n  <div class=\"col-12\">\n      <div class=\"alert alert-danger\">{{this.message}}</div>\n  </div>\n</div>\n\n"
+module.exports = "<!-- <div class=\"row\">\n  <div class=\"col-2\">ID</div><div class=\"col-6\">{{katWarning.id}}</div>\n</div> -->\n<div class=\"row\">\n  <div class=\"col-2\">Standort:</div>\n  <div class=\"col-6\" *ngIf=\"newMode\">\n    <select [(ngModel)]=\"katWarning.locationId\" id=\"locationId\">\n      <option *ngFor=\"let location of availableLocations\" [ngValue]=\"location.locationId\">\n        {{ location.name }}\n      </option>\n    </select>\n  </div>\n  <div class=\"col-6\" *ngIf=\"!newMode\">\n    {{ katWarning.locationId }}\n  </div>\n</div>\n<div class=\"row mt-3\">\n  <div class=\"col-9 offset-2\">\n      In der Zeit zwischen <input class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.fromTime\" maxlength=\"2\" name=\"fromTime\"> und <input maxlength=\"2\" class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.toTime\" name=\"toTime\"> Uhr\n      werden heute im südlichen Teil des Neusiedler Sees Windstärken über <input class=\"mini-input\" maxlength=\"3\" type=\"number\" min=\"0\" max=\"300\" step=\"1\" [(ngModel)]=\"katWarning.expectedWind\" name=\"expectedWind\"> km/h erwartet.\n      Derzeit beträgt die Windstärke <input class=\"mini-input\" type=\"number\" [(ngModel)]=\"katWarning.currentWind\" maxlength=\"3\" min=\"0\" max=\"300\" step=\".1\" name=\"currentWind\"> km/h.\n  </div>\n</div>\n<div class=\"row mt-3\">\n  <div class=\"col-10 offset-2\">\n    <button type=\"button\" class=\"btn btn-outline-secondary\" *ngIf=\"katWarning.id != null\" (click)=\"update()\" [disabled]=\"progress\">Aktualisieren der Warnung</button>\n    <button type=\"button\" class=\"btn btn-outline-secondary\" *ngIf=\"katWarning.id != null\" (click)=\"cancel()\" [disabled]=\"progress\">Warnung Aufheben</button>\n    <button type=\"button\" class=\"btn btn-outline-secondary\" *ngIf=\"katWarning.id == null\" (click)=\"create()\" [disabled]=\"progress\">Neue Warnung erstellen</button>\n    <button type=\"button\" class=\"btn btn-outline-secondary\" [routerLink]=\"['../..']\">Schliessen</button>\n  </div>\n</div>\n<div class=\"row mt-3\" *ngIf=\"this.message\">\n  <div class=\"col-12\">\n      <div class=\"alert alert-danger\">{{this.message}}</div>\n  </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -337,19 +337,19 @@ var KatComponent = /** @class */ (function () {
         var _this = this;
         this.progress = true;
         this.message = '';
-        this.katwarnService.updateKatWarning(this.katWarning).subscribe(function (result) { _this.router.navigateByUrl('/'); }, function (error) { _this.message = 'Fehler beim Aktualisiern der Warnung:' + error.statusText; _this.progress = false; });
+        this.katwarnService.updateKatWarning(this.katWarning).subscribe(function (result) { _this.router.navigate(['../..'], { relativeTo: _this.route }); }, function (error) { _this.message = 'Fehler beim Aktualisiern der Warnung:' + error.statusText; _this.progress = false; });
     };
     KatComponent.prototype.cancel = function () {
         var _this = this;
         this.progress = true;
         this.message = '';
-        this.katwarnService.deleteKatWarning(this.katWarning).subscribe(function (result) { _this.router.navigateByUrl('/'); }, function (error) { _this.message = 'Fehler beim Aufheben der Warnung:' + error.statusText; _this.progress = false; });
+        this.katwarnService.deleteKatWarning(this.katWarning).subscribe(function (result) { _this.router.navigate(['../..'], { relativeTo: _this.route }); }, function (error) { _this.message = 'Fehler beim Aufheben der Warnung:' + error.statusText; _this.progress = false; });
     };
     KatComponent.prototype.create = function () {
         var _this = this;
         this.progress = true;
         this.message = '';
-        this.katwarnService.createKatWarning(this.katWarning).subscribe(function (result) { _this.router.navigateByUrl('/'); }, function (error) { _this.message = 'Fehler beim Anlegen der Warnung:' + error.statusText; _this.progress = false; });
+        this.katwarnService.createKatWarning(this.katWarning).subscribe(function (result) { _this.router.navigate(['../..'], { relativeTo: _this.route }); }, function (error) { _this.message = 'Fehler beim Anlegen der Warnung:' + error.statusText; _this.progress = false; });
     };
     KatComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -388,7 +388,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"list-group\" *ngIf=\"katWarnings\">\n      <button type=\"button\" routerLink=\"/kat/{{katwarn.locationId}}\" *ngFor=\"let katwarn of katWarnings\" class=\"list-group-item list-group-item-action\">\n        In der Zeit zwischen {{katwarn.fromTime}} und {{katwarn.toTime}} Uhr\n        werden heute in {{katwarn.locationId}} Windstärken über {{katwarn.expectedWind}} km/h erwartet.\n        Derzeit beträgt die Windstärke {{katwarn.currentWind}} km/h.\n      </button>\n     <button type=\"button\" *ngIf=\"katWarnings.length == 0\" class=\"list-group-item disabled\" href=\"#\">Keine aktuellen Warnungen</button>\n     <button type=\"button\" routerLink=\"/kat/new\" class=\"list-group-item list-group-item-action\">Neue Unwetterwarnung...</button>\n</div>\n\n"
+module.exports = "<div class=\"list-group\" *ngIf=\"katWarnings\">\n      <button type=\"button\" *ngFor=\"let katwarn of katWarnings\" [routerLink]=\"['./kat',katwarn.locationId]\" class=\"list-group-item list-group-item-action\">\n        In der Zeit zwischen {{katwarn.fromTime}} und {{katwarn.toTime}} Uhr\n        werden heute in {{katwarn.locationId}} Windstärken über {{katwarn.expectedWind}} km/h erwartet.\n        Derzeit beträgt die Windstärke {{katwarn.currentWind}} km/h.\n      </button>\n     <button type=\"button\" *ngIf=\"katWarnings.length == 0\" class=\"list-group-item disabled\" href=\"#\">Keine aktuellen Warnungen</button>\n     <button type=\"button\" [routerLink]=\"['./kat/new']\" class=\"list-group-item list-group-item-action\">Neue Unwetterwarnung...</button>\n</div>\n\n"
 
 /***/ }),
 
@@ -497,6 +497,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/common */ "./node_modules/@angular/common/fesm5/common.js");
 /* harmony import */ var _service_kat_location_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../service/kat-location.service */ "./src/app/service/kat-location.service.ts");
+/* harmony import */ var _service_env_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../service/env.service */ "./src/app/service/env.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -511,13 +512,15 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var MapselectorComponent = /** @class */ (function () {
-    function MapselectorComponent(route, router, location, katLocationService, katWarnService) {
+    function MapselectorComponent(route, router, location, katLocationService, katWarnService, env) {
         this.route = route;
         this.router = router;
         this.location = location;
         this.katLocationService = katLocationService;
         this.katWarnService = katWarnService;
+        this.env = env;
     }
     MapselectorComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -541,7 +544,7 @@ var MapselectorComponent = /** @class */ (function () {
         });
     };
     MapselectorComponent.prototype.openLocation = function (loc) {
-        this.router.navigate(['/kat', loc.locationId]);
+        this.router.navigate([this.env.getEnvironment(), 'kat', loc.locationId]);
     };
     MapselectorComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -553,7 +556,8 @@ var MapselectorComponent = /** @class */ (function () {
             _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
             _angular_common__WEBPACK_IMPORTED_MODULE_3__["Location"],
             _service_kat_location_service__WEBPACK_IMPORTED_MODULE_4__["KatLocationService"],
-            _service_katwarn_service__WEBPACK_IMPORTED_MODULE_1__["KatwarnService"]])
+            _service_katwarn_service__WEBPACK_IMPORTED_MODULE_1__["KatwarnService"],
+            _service_env_service__WEBPACK_IMPORTED_MODULE_5__["EnvironmentService"]])
     ], MapselectorComponent);
     return MapselectorComponent;
 }());

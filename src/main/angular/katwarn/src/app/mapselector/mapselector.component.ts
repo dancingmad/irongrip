@@ -4,6 +4,7 @@ import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {Location} from '@angular/common';
 import {KatLocationService} from '../service/kat-location.service';
 import {KatLocation} from '../service/katlocation';
+import {EnvironmentService} from '../service/env.service';
 
 @Component({
   selector: 'app-mapselector',
@@ -18,7 +19,8 @@ export class MapselectorComponent implements OnInit {
               private router: Router,
               private location: Location,
               private katLocationService: KatLocationService,
-              private katWarnService: KatwarnService) { }
+              private katWarnService: KatwarnService,
+              private env: EnvironmentService) { }
 
   ngOnInit() {
     this.locations = this.katLocationService.getLocations();
@@ -44,7 +46,7 @@ export class MapselectorComponent implements OnInit {
 
 
   openLocation(loc: KatLocation) {
-    this.router.navigate(['/kat', loc.locationId]);
+    this.router.navigate([this.env.getEnvironment(),'kat',loc.locationId]);
   }
 
 }

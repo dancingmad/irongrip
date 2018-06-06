@@ -26,7 +26,7 @@
     <button type="button" class="btn btn-outline-secondary" *ngIf="katWarning.id != null" (click)="update()" [disabled]="progress">Aktualisieren der Warnung</button>
     <button type="button" class="btn btn-outline-secondary" *ngIf="katWarning.id != null" (click)="cancel()" [disabled]="progress">Warnung Aufheben</button>
     <button type="button" class="btn btn-outline-secondary" *ngIf="katWarning.id == null" (click)="create()" [disabled]="progress">Neue Warnung erstellen</button>
-    <button type="button" class="btn btn-outline-secondary" routerLink="/">Schliessen</button>
+    <button type="button" class="btn btn-outline-secondary" [routerLink]="['../..']">Schliessen</button>
   </div>
 </div>
 <div class="row mt-3" *ngIf="this.message">

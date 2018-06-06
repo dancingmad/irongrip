@@ -80,7 +80,7 @@ export class KatComponent implements OnInit {
     this.progress = true;
     this.message = '';
     this.katwarnService.updateKatWarning(this.katWarning).subscribe(
-      result => { this.router.navigateByUrl('/'); },
+      result => { this.router.navigate(['../..'],{relativeTo: this.route}); },
       error => { this.message = 'Fehler beim Aktualisiern der Warnung:' + error.statusText; this.progress = false; }
     );
   }
@@ -89,7 +89,7 @@ export class KatComponent implements OnInit {
     this.progress = true;
     this.message = '';
     this.katwarnService.deleteKatWarning(this.katWarning).subscribe(
-      result => { this.router.navigateByUrl('/'); },
+      result => { this.router.navigate(['../..'],{relativeTo: this.route}); },
       error => { this.message = 'Fehler beim Aufheben der Warnung:' + error.statusText; this.progress = false; }
       );
   }
@@ -98,7 +98,7 @@ export class KatComponent implements OnInit {
     this.progress = true;
     this.message = '';
     this.katwarnService.createKatWarning(this.katWarning).subscribe(
-      result => { this.router.navigateByUrl('/'); },
+      result => { this.router.navigate(['../..'], {relativeTo: this.route}); },
       error => { this.message = 'Fehler beim Anlegen der Warnung:' + error.statusText; this.progress = false; }
     );
   }
