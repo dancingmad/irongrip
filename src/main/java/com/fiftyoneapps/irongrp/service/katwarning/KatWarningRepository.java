@@ -9,4 +9,5 @@ public interface KatWarningRepository extends CrudRepository<KatWarning, Long>{
 
     @Query("MATCH (m:KatWarning{locationId:{0}}) return m")
     List<KatWarning> findActiveByLocationId(String locationId);
+
 }

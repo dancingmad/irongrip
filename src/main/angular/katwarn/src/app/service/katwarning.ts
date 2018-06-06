@@ -1,8 +1,6 @@
 export class KatWarning {
   id: number;
 
-  type: string;
-
   fromTime: number;
   toTime: number;
 

@@ -5,8 +5,9 @@ import {KatlistComponent} from '../katlist/katlist.component';
 
 
 const routes: Routes = [
-  { path: 'kat/:locationId' , component: KatComponent },
-  { path: '' , component: KatlistComponent }
+  { path: ':env/kat/:locationId' , component: KatComponent },
+  { path: ':env' , component: KatlistComponent },
+  { path: '' , redirectTo: 'test', pathMatch: 'full'}
 ]
 
 @NgModule({

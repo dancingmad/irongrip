@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {KatwarnService} from '../service/katwarn.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {KatWarning} from '../service/katwarning';
 import {Observable} from 'rxjs';
+import {EnvironmentService} from '../service/env.service';
 
 @Component({
   selector: 'app-katlist',
@@ -13,11 +14,23 @@ export class KatlistComponent implements OnInit {
 
   katWarnings: KatWarning[];
 
-  constructor(private katwarnService: KatwarnService) { }
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              private env: EnvironmentService,
+              private katwarnService: KatwarnService) { }
 
   ngOnInit() {
-    return this.katwarnService.getKatWarnings().subscribe(
-      katWarnings => this.katWarnings = katWarnings
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.initKatWarnings();
+      }
+    });
+    this.initKatWarnings();
+  }
+
+  initKatWarnings() {
+    this.katwarnService.getKatWarnings().subscribe(
+      katWarnings => this.katWarnings = katWarnings.filter(warn => warn.locationId)
     );
   }
 
@@ -25,13 +38,5 @@ export class KatlistComponent implements OnInit {
     return this.katWarnings;
   }
 
-  parseWarning(katwarn: KatWarning) {
-    if (katwarn && katwarn.type === 'default') {
-      return `In der Zeit zwischen ${katwarn.fromTime} und ${katwarn.toTime} Uhr werden heute in ` +
-      ` ${katwarn.locationId} Windstärken über ${katwarn.expectedWind} km/h erwartet.`+
-        ` Derzeit beträgt die Windstärke ${katwarn.currentWind} km/h.`;
-    } else {
-      return '';
-    }
-  }
+
 }

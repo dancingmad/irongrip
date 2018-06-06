@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/katwarn")
+@RequestMapping("/{env}/api/katwarn")
 public class KatWarnResource {
 
     private Logger LOGGER = LoggerFactory.getLogger(KatWarnResource.class);
@@ -31,47 +32,59 @@ public class KatWarnResource {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public List<KatWarning> list() {
+    public List<KatWarning> list(@PathVariable("env") String env) {
         List<KatWarning> katWarnings = new ArrayList<>();
         katWarningRepository.findAll().forEach(katWarnings::add);
-        return katWarnings;
+        return katWarnings.stream()
+                .filter(warn -> env.equals(warn.getEnv()))
+                .collect(Collectors.toList());
     }
 
 
     @RequestMapping(value = "/{locationId}", method = RequestMethod.GET)
-    public KatWarning detail(@PathVariable String locationId) {
+    public KatWarning detail(@PathVariable("env") String env, @PathVariable String locationId) {
         List<KatWarning> warnings = katWarningRepository.findActiveByLocationId(locationId);
         if (CollectionUtils.isEmpty(warnings)) {
             return null;
         }
-        return warnings.get(0);
+        return warnings.stream()
+                .filter(warn -> env.equals(warn.getEnv()))
+                .findFirst().get();
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public KatWarning add(@Valid @RequestBody KatWarning katWarning) {
-        List<KatWarning> warnings = katWarningRepository.findActiveByLocationId(katWarning.getLocationId());
+    public KatWarning add(@PathVariable("env") String env, @Valid @RequestBody KatWarning katWarning) {
+        List<KatWarning> warnings = katWarningRepository.findActiveByLocationId(katWarning.getLocationId()).stream()
+                .filter(warn -> env.equals(warn.getEnv()))
+                .collect(Collectors.toList());
         if (!CollectionUtils.isEmpty(warnings)) {
             throw new RuntimeException("Already active warning for this location");
         }
         // save the new Warning
+        katWarning.setEnv(env);
         katWarningRepository.save(katWarning);
         return katWarning;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public void edit(@Valid @RequestBody KatWarning katWarning) {
+    public void edit(@PathVariable("env") String env, @Valid @RequestBody KatWarning katWarning) {
         KatWarning currentWarning = katWarningRepository.findById(katWarning.getId()).get();
         // prevent switching locations
         katWarning.setLocationId(currentWarning.getLocationId());
         // update the warning
+        katWarning.setEnv(env);
         katWarningRepository.save(katWarning);
     }
 
     @RequestMapping(value = "/{locationId}", method = RequestMethod.DELETE)
-    public void edit(@PathVariable String locationId) {
+    public void delete(@PathVariable("env") String env, @PathVariable String locationId) {
         List<KatWarning> warnings = katWarningRepository.findActiveByLocationId(locationId);
         // delete all active warnings for location
-        warnings.forEach(katWarningRepository::delete);
+        warnings.forEach(warn -> {
+                if (env.equals(warn.getEnv())) {
+                    katWarningRepository.delete(warn);
+                }
+        });
     }
 
 

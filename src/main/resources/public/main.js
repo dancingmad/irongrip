@@ -48,8 +48,9 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 
 
 var routes = [
-    { path: 'kat/:locationId', component: _kat_kat_component__WEBPACK_IMPORTED_MODULE_2__["KatComponent"] },
-    { path: '', component: _katlist_katlist_component__WEBPACK_IMPORTED_MODULE_3__["KatlistComponent"] }
+    { path: ':env/kat/:locationId', component: _kat_kat_component__WEBPACK_IMPORTED_MODULE_2__["KatComponent"] },
+    { path: ':env', component: _katlist_katlist_component__WEBPACK_IMPORTED_MODULE_3__["KatlistComponent"] },
+    { path: '', redirectTo: 'test', pathMatch: 'full' }
 ];
 var AppRoutingModule = /** @class */ (function () {
     function AppRoutingModule() {
@@ -85,7 +86,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar navbar-dark fixed-top bg-dark shadow\">\n      <h2 class=\"text-light\">Unwetter Warnungen</h2>\n</nav>\n  <div class=\"container-fluid\">\n  <div class=\"row\">\n    <nav class=\"col-6 d-none d-md-block bg-light sidebar\"><app-mapselector></app-mapselector></nav>\n    <main class=\"col-md-6 ml-sm-auto col-lg-6 px-6\"><router-outlet></router-outlet></main>\n  </div>\n  </div>\n\n"
+module.exports = "<nav class=\"navbar navbar-dark fixed-top bg-dark shadow\">\n      <h2 class=\"text-light\">Unwetter Warnungen</h2>\n      <a class=\"btn btn-light\" *ngIf=\"getEnvironment()=='test'\" routerLink=\"/live/\">Switch to LIVE</a>\n      <a class=\"btn btn-light\" *ngIf=\"getEnvironment()=='live'\" routerLink=\"/test/\">Switch to TEST</a>\n</nav>\n  <div class=\"container-fluid\">\n  <div class=\"row\">\n    <nav class=\"col-6 d-none d-md-block bg-light sidebar\"><app-mapselector></app-mapselector></nav>\n    <main class=\"col-md-6 ml-sm-auto col-lg-6 px-6\"><router-outlet></router-outlet></main>\n  </div>\n  </div>\n"
 
 /***/ }),
 
@@ -100,23 +101,48 @@ module.exports = "<nav class=\"navbar navbar-dark fixed-top bg-dark shadow\">\n 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppComponent", function() { return AppComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _service_env_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./service/env.service */ "./src/app/service/env.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
 
 var AppComponent = /** @class */ (function () {
-    function AppComponent() {
+    function AppComponent(router, env) {
+        this.router = router;
+        this.env = env;
         this.title = 'app';
     }
+    AppComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this.router.events.subscribe(function (event) {
+            if (event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_2__["NavigationStart"]) {
+                _this.env.setEnvironment(event.url.startsWith('/test') ? 'test' : 'live');
+            }
+        });
+    };
+    AppComponent.prototype.getEnvironment = function () {
+        return this.env.getEnvironment();
+    };
+    AppComponent.prototype.setEnvironment = function (env) {
+        this.env.setEnvironment(env);
+    };
     AppComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
             selector: 'app-root',
             template: __webpack_require__(/*! ./app.component.html */ "./src/app/app.component.html"),
             styles: [__webpack_require__(/*! ./app.component.css */ "./src/app/app.component.css")]
-        })
+        }),
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _service_env_service__WEBPACK_IMPORTED_MODULE_1__["EnvironmentService"]])
     ], AppComponent);
     return AppComponent;
 }());
@@ -215,7 +241,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n  <div class=\"col-2\">ID</div><div class=\"col-6\">{{katWarning.id}}</div>\n</div>\n<div class=\"row\">\n  <div class=\"col-2\">Typ</div><div class=\"col-6\">\n    <select [(ngModel)]=\"katWarning.type\" id=\"type\">\n      <option value=\"\">None</option>\n      <option value=\"default\">Default</option>\n    </select>\n  </div>\n</div>\n<div class=\"row\" *ngIf=\"katWarning.type=='default'\">\n  <div class=\"col-9 offset-2\">\n      In der Zeit zwischen <input class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.fromTime\" maxlength=\"2\" name=\"fromTime\"> und <input maxlength=\"2\" class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.toTime\" name=\"toTime\"> Uhr\n      werden heute im südlichen Teil des Neusiedler Sees Windstärken über <input class=\"mini-input\" maxlength=\"3\" type=\"number\" min=\"0\" max=\"300\" step=\"1\" [(ngModel)]=\"katWarning.expectedWind\" name=\"expectedWind\"> km/h erwartet.\n      Derzeit beträgt die Windstärke <input class=\"mini-input\" type=\"number\" [(ngModel)]=\"katWarning.currentWind\" maxlength=\"3\" min=\"0\" max=\"300\" step=\".1\" name=\"currentWind\"> km/h.\n  </div>\n</div>\n<div class=\"row\">\n  <div class=\"col-2\">Location</div>\n  <div class=\"col-6\">\n    <select [(ngModel)]=\"katWarning.locationId\" id=\"locationId\">\n      <option *ngFor=\"let location of availableLocations\" [ngValue]=\"location.locationId\">\n        {{ location.name }}\n      </option>\n    </select>\n  </div>\n</div>\n\n<div class=\"row\">\n  <div class=\"col-6 offset-2\">\n    <button class=\"btn btn-default\" *ngIf=\"katWarning.id\" (click)=\"update()\">Update</button>\n    <button class=\"btn btn-default\" *ngIf=\"katWarning.id\" (click)=\"cancel()\">Cancel</button>\n    <button class=\"btn btn-default\" *ngIf=\"!katWarning.id\" (click)=\"create()\">Create</button>\n    <button class=\"btn btn-default\" routerLink=\"/\">Close</button>\n  </div>\n</div>\n\n"
+module.exports = "<!-- <div class=\"row\">\n  <div class=\"col-2\">ID</div><div class=\"col-6\">{{katWarning.id}}</div>\n</div> -->\n<div class=\"row\">\n  <div class=\"col-2\">Standort:</div>\n  <div class=\"col-6\" *ngIf=\"newMode\">\n    <select [(ngModel)]=\"katWarning.locationId\" id=\"locationId\">\n      <option *ngFor=\"let location of availableLocations\" [ngValue]=\"location.locationId\">\n        {{ location.name }}\n      </option>\n    </select>\n  </div>\n  <div class=\"col-6\" *ngIf=\"!newMode\">\n    {{ katWarning.locationId }}\n  </div>\n</div>\n<div class=\"row mt-3\">\n  <div class=\"col-9 offset-2\">\n      In der Zeit zwischen <input class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.fromTime\" maxlength=\"2\" name=\"fromTime\"> und <input maxlength=\"2\" class=\"mini-input\" type=\"number\" min=\"0\" max=\"24\" [(ngModel)]=\"katWarning.toTime\" name=\"toTime\"> Uhr\n      werden heute im südlichen Teil des Neusiedler Sees Windstärken über <input class=\"mini-input\" maxlength=\"3\" type=\"number\" min=\"0\" max=\"300\" step=\"1\" [(ngModel)]=\"katWarning.expectedWind\" name=\"expectedWind\"> km/h erwartet.\n      Derzeit beträgt die Windstärke <input class=\"mini-input\" type=\"number\" [(ngModel)]=\"katWarning.currentWind\" maxlength=\"3\" min=\"0\" max=\"300\" step=\".1\" name=\"currentWind\"> km/h.\n  </div>\n</div>\n<div class=\"row mt-3\">\n  <div class=\"col-10 offset-2\">\n    <button type=\"button\" class=\"btn btn-outline-secondary\" *ngIf=\"katWarning.id != null\" (click)=\"update()\" [disabled]=\"progress\">Aktualisieren der Warnung</button>\n    <button type=\"button\" class=\"btn btn-outline-secondary\" *ngIf=\"katWarning.id != null\" (click)=\"cancel()\" [disabled]=\"progress\">Warnung Aufheben</button>\n    <button type=\"button\" class=\"btn btn-outline-secondary\" *ngIf=\"katWarning.id == null\" (click)=\"create()\" [disabled]=\"progress\">Neue Warnung erstellen</button>\n    <button type=\"button\" class=\"btn btn-outline-secondary\" routerLink=\"/\">Schliessen</button>\n  </div>\n</div>\n<div class=\"row mt-3\" *ngIf=\"this.message\">\n  <div class=\"col-12\">\n      <div class=\"alert alert-danger\">{{this.message}}</div>\n  </div>\n</div>\n\n"
 
 /***/ }),
 
@@ -257,6 +283,8 @@ var KatComponent = /** @class */ (function () {
         this.location = location;
         this.katwarnService = katwarnService;
         this.katLocationService = katLocationService;
+        this.progress = false;
+        this.newMode = false;
         this.katWarning = new _service_katwarning__WEBPACK_IMPORTED_MODULE_4__["KatWarning"]();
         this.availableLocations = [];
     }
@@ -276,11 +304,12 @@ var KatComponent = /** @class */ (function () {
     KatComponent.prototype.getKatWarning = function () {
         var _this = this;
         var locationId = this.route.snapshot.paramMap.get('locationId');
-        this.katWarning.locationId = locationId;
         if (locationId === 'new') {
-            this.getAvailableLocations('');
+            this.newMode = true;
+            this.getAvailableLocations();
         }
         else {
+            this.katWarning.locationId = locationId;
             this.katwarnService.getKatWarning(locationId)
                 .subscribe(function (katwarn) {
                 if (katwarn) {
@@ -289,32 +318,38 @@ var KatComponent = /** @class */ (function () {
                 else {
                     _this.katWarning = { locationId: locationId };
                 }
-                _this.getAvailableLocations(_this.katWarning.locationId);
             });
         }
     };
-    KatComponent.prototype.getAvailableLocations = function (selectedLocationId) {
+    KatComponent.prototype.getAvailableLocations = function () {
         var _this = this;
         this.katwarnService.getKatWarnings().subscribe(function (katWarnings) {
             var existingLocations = katWarnings.map(function (warn) { return warn.locationId; });
             _this.availableLocations = [];
             _this.locations.forEach(function (location) {
-                if (existingLocations.indexOf(location.locationId) < 0 || location.locationId === selectedLocationId) {
+                if (existingLocations.indexOf(location.locationId) < 0) {
                     _this.availableLocations.push(location);
                 }
             });
         });
     };
     KatComponent.prototype.update = function () {
-        this.katwarnService.updateKatWarning(this.katWarning);
+        var _this = this;
+        this.progress = true;
+        this.message = '';
+        this.katwarnService.updateKatWarning(this.katWarning).subscribe(function (result) { _this.router.navigateByUrl('/'); }, function (error) { _this.message = 'Fehler beim Aktualisiern der Warnung:' + error.statusText; _this.progress = false; });
     };
     KatComponent.prototype.cancel = function () {
-        this.katwarnService.deleteKatWarning(this.katWarning);
-        this.location.back();
+        var _this = this;
+        this.progress = true;
+        this.message = '';
+        this.katwarnService.deleteKatWarning(this.katWarning).subscribe(function (result) { _this.router.navigateByUrl('/'); }, function (error) { _this.message = 'Fehler beim Aufheben der Warnung:' + error.statusText; _this.progress = false; });
     };
     KatComponent.prototype.create = function () {
         var _this = this;
-        this.katwarnService.createKatWarning(this.katWarning).subscribe(function (katWarn) { return _this.katWarning = katWarn; });
+        this.progress = true;
+        this.message = '';
+        this.katwarnService.createKatWarning(this.katWarning).subscribe(function (result) { _this.router.navigateByUrl('/'); }, function (error) { _this.message = 'Fehler beim Anlegen der Warnung:' + error.statusText; _this.progress = false; });
     };
     KatComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -353,7 +388,7 @@ module.exports = ""
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"list-group\" *ngIf=\"katWarnings\">\n      <button type=\"button\" routerLink=\"/kat/{{katwarn.locationId}}\" *ngFor=\"let katwarn of katWarnings\" class=\"list-group-item\">\n        {{parseWarning(katwarn)}}\n      </button>\n     <button type=\"button\" *ngIf=\"katWarnings.length == 0\" class=\"list-group-item disabled\" href=\"#\">Keine aktuellen Warnungen</button>\n     <button type=\"button\" routerLink=\"/kat/new\" class=\"list-group-item\">Neue Unwetterwarnung...</button>\n</div>\n\n"
+module.exports = "<div class=\"list-group\" *ngIf=\"katWarnings\">\n      <button type=\"button\" routerLink=\"/kat/{{katwarn.locationId}}\" *ngFor=\"let katwarn of katWarnings\" class=\"list-group-item list-group-item-action\">\n        In der Zeit zwischen {{katwarn.fromTime}} und {{katwarn.toTime}} Uhr\n        werden heute in {{katwarn.locationId}} Windstärken über {{katwarn.expectedWind}} km/h erwartet.\n        Derzeit beträgt die Windstärke {{katwarn.currentWind}} km/h.\n      </button>\n     <button type=\"button\" *ngIf=\"katWarnings.length == 0\" class=\"list-group-item disabled\" href=\"#\">Keine aktuellen Warnungen</button>\n     <button type=\"button\" routerLink=\"/kat/new\" class=\"list-group-item list-group-item-action\">Neue Unwetterwarnung...</button>\n</div>\n\n"
 
 /***/ }),
 
@@ -369,6 +404,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KatlistComponent", function() { return KatlistComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _service_katwarn_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../service/katwarn.service */ "./src/app/service/katwarn.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _service_env_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../service/env.service */ "./src/app/service/env.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -380,26 +417,30 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
+
 var KatlistComponent = /** @class */ (function () {
-    function KatlistComponent(katwarnService) {
+    function KatlistComponent(router, route, env, katwarnService) {
+        this.router = router;
+        this.route = route;
+        this.env = env;
         this.katwarnService = katwarnService;
     }
     KatlistComponent.prototype.ngOnInit = function () {
         var _this = this;
-        return this.katwarnService.getKatWarnings().subscribe(function (katWarnings) { return _this.katWarnings = katWarnings; });
+        this.router.events.subscribe(function (event) {
+            if (event instanceof _angular_router__WEBPACK_IMPORTED_MODULE_2__["NavigationEnd"]) {
+                _this.initKatWarnings();
+            }
+        });
+        this.initKatWarnings();
+    };
+    KatlistComponent.prototype.initKatWarnings = function () {
+        var _this = this;
+        this.katwarnService.getKatWarnings().subscribe(function (katWarnings) { return _this.katWarnings = katWarnings.filter(function (warn) { return warn.locationId; }); });
     };
     KatlistComponent.prototype.getKatWarnings = function () {
         return this.katWarnings;
-    };
-    KatlistComponent.prototype.parseWarning = function (katwarn) {
-        if (katwarn && katwarn.type === 'default') {
-            return "In der Zeit zwischen " + katwarn.fromTime + " und " + katwarn.toTime + " Uhr werden heute in " +
-                (" " + katwarn.locationId + " Windst\u00E4rken \u00FCber " + katwarn.expectedWind + " km/h erwartet.") +
-                (" Derzeit betr\u00E4gt die Windst\u00E4rke " + katwarn.currentWind + " km/h.");
-        }
-        else {
-            return '';
-        }
     };
     KatlistComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -407,7 +448,10 @@ var KatlistComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./katlist.component.html */ "./src/app/katlist/katlist.component.html"),
             styles: [__webpack_require__(/*! ./katlist.component.css */ "./src/app/katlist/katlist.component.css")]
         }),
-        __metadata("design:paramtypes", [_service_katwarn_service__WEBPACK_IMPORTED_MODULE_1__["KatwarnService"]])
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
+            _service_env_service__WEBPACK_IMPORTED_MODULE_3__["EnvironmentService"],
+            _service_katwarn_service__WEBPACK_IMPORTED_MODULE_1__["KatwarnService"]])
     ], KatlistComponent);
     return KatlistComponent;
 }());
@@ -518,6 +562,46 @@ var MapselectorComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/service/env.service.ts":
+/*!****************************************!*\
+  !*** ./src/app/service/env.service.ts ***!
+  \****************************************/
+/*! exports provided: EnvironmentService */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EnvironmentService", function() { return EnvironmentService; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+
+var EnvironmentService = /** @class */ (function () {
+    function EnvironmentService() {
+        this.env = 'test';
+    }
+    EnvironmentService.prototype.setEnvironment = function (env) {
+        this.env = env;
+    };
+    EnvironmentService.prototype.getEnvironment = function () {
+        return this.env;
+    };
+    EnvironmentService = __decorate([
+        Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
+            providedIn: 'root'
+        })
+    ], EnvironmentService);
+    return EnvironmentService;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/service/kat-location.service.ts":
 /*!*************************************************!*\
   !*** ./src/app/service/kat-location.service.ts ***!
@@ -583,6 +667,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "KatwarnService", function() { return KatwarnService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
+/* harmony import */ var _env_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./env.service */ "./src/app/service/env.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -594,38 +679,40 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var KatwarnService = /** @class */ (function () {
-    function KatwarnService(http) {
+    function KatwarnService(http, env) {
         this.http = http;
+        this.env = env;
         this.httpOptions = {
             headers: new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({ 'Content-Type': 'application/json' })
         };
         this.katwarnUrl = 'api/katwarn/'; // URL to web api
     }
     KatwarnService.prototype.getKatWarnings = function () {
-        return this.http.get(this.katwarnUrl);
+        return this.http.get(this.env.getEnvironment() + '/' + this.katwarnUrl);
     };
     KatwarnService.prototype.getKatWarning = function (locationId) {
-        var detailUrl = "" + this.katwarnUrl + locationId;
+        var detailUrl = this.env.getEnvironment() + "/" + this.katwarnUrl + locationId;
         return this.http.get(detailUrl);
     };
     KatwarnService.prototype.updateKatWarning = function (katWarning) {
         // do update
-        this.http.put(this.katwarnUrl, katWarning).subscribe();
+        return this.http.put(this.env.getEnvironment() + '/' + this.katwarnUrl, katWarning);
     };
     KatwarnService.prototype.createKatWarning = function (katWarning) {
-        var detailUrl = "" + this.katwarnUrl;
-        return this.http.post(this.katwarnUrl, katWarning);
+        return this.http.post(this.env.getEnvironment() + '/' + this.katwarnUrl, katWarning);
     };
     KatwarnService.prototype.deleteKatWarning = function (katWarning) {
-        var detailUrl = "" + this.katwarnUrl + katWarning.locationId;
-        this.http.delete(detailUrl).subscribe();
+        var detailUrl = this.env.getEnvironment() + "/" + this.katwarnUrl + katWarning.locationId;
+        return this.http.delete(detailUrl);
     };
     KatwarnService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
             providedIn: 'root'
         }),
-        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
+        __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"],
+            _env_service__WEBPACK_IMPORTED_MODULE_2__["EnvironmentService"]])
     ], KatwarnService);
     return KatwarnService;
 }());

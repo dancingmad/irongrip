@@ -1,6 +1,11 @@
 {
-  "/api": {
+  "/test/api": {
+    "target": "http://localhost:8080",
+    "secure": false
+  },
+  "/live/api": {
     "target": "http://localhost:8080",
     "secure": false
   }
+
 }

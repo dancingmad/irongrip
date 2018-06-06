@@ -13,6 +13,10 @@ import {KatLocationService} from '../service/kat-location.service';
 })
 export class KatComponent implements OnInit {
 
+  message: string;
+  progress: boolean = false;
+  newMode: boolean = false;
+
   locations: KatLocation[];
 
   katWarning: KatWarning = new KatWarning();
@@ -42,10 +46,11 @@ export class KatComponent implements OnInit {
 
   getKatWarning() {
     const locationId = this.route.snapshot.paramMap.get('locationId');
-    this.katWarning.locationId = locationId;
     if (locationId === 'new') {
-      this.getAvailableLocations('');
+      this.newMode = true;
+      this.getAvailableLocations();
     } else {
+      this.katWarning.locationId = locationId;
       this.katwarnService.getKatWarning(locationId)
         .subscribe(katwarn => {
           if (katwarn) {
@@ -53,18 +58,17 @@ export class KatComponent implements OnInit {
           } else {
             this.katWarning = {locationId: locationId} as KatWarning;
           }
-          this.getAvailableLocations(this.katWarning.locationId);
         });
     }
   }
 
-  getAvailableLocations(selectedLocationId) {
+  getAvailableLocations() {
     this.katwarnService.getKatWarnings().subscribe(
       katWarnings => {
         const existingLocations = katWarnings.map(warn => warn.locationId);
         this.availableLocations = [];
         this.locations.forEach(location => {
-           if (existingLocations.indexOf(location.locationId) < 0 || location.locationId === selectedLocationId) {
+           if (existingLocations.indexOf(location.locationId) < 0) {
             this.availableLocations.push(location);
           }
         });
@@ -73,17 +77,29 @@ export class KatComponent implements OnInit {
   }
 
   update() {
-    this.katwarnService.updateKatWarning(this.katWarning);
+    this.progress = true;
+    this.message = '';
+    this.katwarnService.updateKatWarning(this.katWarning).subscribe(
+      result => { this.router.navigateByUrl('/'); },
+      error => { this.message = 'Fehler beim Aktualisiern der Warnung:' + error.statusText; this.progress = false; }
+    );
   }
 
   cancel() {
-    this.katwarnService.deleteKatWarning(this.katWarning);
-    this.location.back();
+    this.progress = true;
+    this.message = '';
+    this.katwarnService.deleteKatWarning(this.katWarning).subscribe(
+      result => { this.router.navigateByUrl('/'); },
+      error => { this.message = 'Fehler beim Aufheben der Warnung:' + error.statusText; this.progress = false; }
+      );
   }
 
   create() {
+    this.progress = true;
+    this.message = '';
     this.katwarnService.createKatWarning(this.katWarning).subscribe(
-      katWarn => this.katWarning = katWarn
+      result => { this.router.navigateByUrl('/'); },
+      error => { this.message = 'Fehler beim Anlegen der Warnung:' + error.statusText; this.progress = false; }
     );
   }
 

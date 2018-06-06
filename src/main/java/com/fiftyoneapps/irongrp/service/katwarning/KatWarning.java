@@ -20,6 +20,16 @@ public class KatWarning {
     private Float expectedWind;
     private Float currentWind;
 
+    private String env;
+
+    public String getEnv() {
+        return env;
+    }
+
+    public void setEnv(String env) {
+        this.env = env;
+    }
+
     public Long getId() {
         return id;
     }

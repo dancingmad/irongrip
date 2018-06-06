@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {KatWarning} from './katwarning';
 import {Observable} from 'rxjs';
+import {EnvironmentService} from './env.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,29 +14,30 @@ export class KatwarnService {
 
   private katwarnUrl = 'api/katwarn/';  // URL to web api
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+              private env: EnvironmentService) {
+  }
 
   getKatWarnings(): Observable<KatWarning[]> {
-    return this.http.get<KatWarning[]>(this.katwarnUrl);
+    return this.http.get<KatWarning[]>(this.env.getEnvironment() + '/' + this.katwarnUrl);
   }
 
   getKatWarning(locationId: string): Observable<KatWarning> {
-    const detailUrl = `${this.katwarnUrl}${locationId}`;
+    const detailUrl = `${this.env.getEnvironment()}/${this.katwarnUrl}${locationId}`;
     return this.http.get<KatWarning>(detailUrl);
   }
 
-  updateKatWarning(katWarning: KatWarning) {
+  updateKatWarning(katWarning: KatWarning): Observable<KatWarning> {
      // do update
-    this.http.put<KatWarning>(this.katwarnUrl, katWarning).subscribe();
+    return this.http.put<KatWarning>(this.env.getEnvironment() + '/' + this.katwarnUrl, katWarning);
   }
 
   createKatWarning(katWarning: KatWarning): Observable<KatWarning> {
-    const detailUrl = `${this.katwarnUrl}`;
-    return this.http.post<KatWarning>(this.katwarnUrl, katWarning);
+    return this.http.post<KatWarning>(this.env.getEnvironment() + '/' + this.katwarnUrl, katWarning);
   }
 
-  deleteKatWarning(katWarning: KatWarning) {
-    const detailUrl = `${this.katwarnUrl}${katWarning.locationId}`;
-    this.http.delete<KatWarning>(detailUrl).subscribe();
+  deleteKatWarning(katWarning: KatWarning): Observable<KatWarning> {
+    const detailUrl = `${this.env.getEnvironment()}/${this.katwarnUrl}${katWarning.locationId}`;
+    return this.http.delete<KatWarning>(detailUrl);
   }
 }
