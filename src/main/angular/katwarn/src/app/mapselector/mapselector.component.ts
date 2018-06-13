@@ -14,6 +14,8 @@ import {EnvironmentService} from '../service/env.service';
 export class MapselectorComponent implements OnInit {
 
   locations: KatLocation[];
+  loading = false;
+  errorMessage = '';
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -35,12 +37,18 @@ export class MapselectorComponent implements OnInit {
   }
 
   updateLocations() {
+    this.loading = true;
+    this.errorMessage = '';
     this.katWarnService.getKatWarnings().subscribe(
       warnings => {
+        this.loading = false;
         const warnLocations = warnings.map(warn => warn.locationId);
         this.locations.forEach(loc => {
           loc.active = (warnLocations.indexOf(loc.locationId) > -1);
         });
+      }, error => {
+        this.loading = false;
+        this.errorMessage = error.statusText;
       });
   }
 

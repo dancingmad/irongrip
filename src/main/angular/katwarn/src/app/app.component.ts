@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationStart) {
-        this.env.setEnvironment(event.url.startsWith('/test')?'test':'live');
+        this.env.setEnvironment(event.url.startsWith('/live')?'live':'test');
       }
     });
   }

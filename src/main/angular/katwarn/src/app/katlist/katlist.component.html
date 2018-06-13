@@ -1,4 +1,7 @@
-<div class="list-group" *ngIf="katWarnings">
+<div *ngIf="loading">
+  <app-loader></app-loader>
+</div>
+<div class="list-group" *ngIf="!loading && katWarnings">
       <button type="button" *ngFor="let katwarn of katWarnings" [routerLink]="['./kat',katwarn.locationId]" class="list-group-item list-group-item-action">
         In der Zeit zwischen {{katwarn.fromTime}} und {{katwarn.toTime}} Uhr
         werden heute in {{katwarn.locationId}} Windstärken über {{katwarn.expectedWind}} km/h erwartet.
@@ -7,4 +10,5 @@
      <button type="button" *ngIf="katWarnings.length == 0" class="list-group-item disabled" href="#">Keine aktuellen Warnungen</button>
      <button type="button" [routerLink]="['./kat/new']" class="list-group-item list-group-item-action">Neue Unwetterwarnung...</button>
 </div>
+<div *ngIf="this.errorMessage" class="alert alert-danger">{{this.errorMessage}}</div>
 

@@ -10,13 +10,15 @@ import {HttpClientModule} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {TooltipModule} from 'ngx-bootstrap';
 import { setTheme } from 'ngx-bootstrap/utils';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapselectorComponent,
     KatlistComponent,
-    KatComponent
+    KatComponent,
+    LoaderComponent
   ],
   imports: [
     BrowserModule,

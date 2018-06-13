@@ -13,6 +13,8 @@ import {EnvironmentService} from '../service/env.service';
 export class KatlistComponent implements OnInit {
 
   katWarnings: KatWarning[];
+  loading = false;
+  errorMessage = '';
 
   constructor(private router: Router,
               private route: ActivatedRoute,
@@ -29,8 +31,16 @@ export class KatlistComponent implements OnInit {
   }
 
   initKatWarnings() {
+    this.loading = true;
+    this.errorMessage = '';
     this.katwarnService.getKatWarnings().subscribe(
-      katWarnings => this.katWarnings = katWarnings.filter(warn => warn.locationId)
+      katWarnings => {
+        this.katWarnings = katWarnings.filter(warn => warn.locationId);
+        this.loading = false;
+      }, error => {
+            this.loading = false;
+            this.errorMessage = error.statusText;
+      }
     );
   }
 

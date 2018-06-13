@@ -13,9 +13,9 @@ import {KatLocationService} from '../service/kat-location.service';
 })
 export class KatComponent implements OnInit {
 
-  message: string;
-  progress: boolean = false;
-  newMode: boolean = false;
+  errorMessage: string;
+  loading =  false;
+  newMode  = false;
 
   locations: KatLocation[];
 
@@ -45,19 +45,25 @@ export class KatComponent implements OnInit {
   }
 
   getKatWarning() {
+    this.loading = true;
     const locationId = this.route.snapshot.paramMap.get('locationId');
     if (locationId === 'new') {
       this.newMode = true;
+      this.loading = false;
       this.getAvailableLocations();
     } else {
       this.katWarning.locationId = locationId;
       this.katwarnService.getKatWarning(locationId)
         .subscribe(katwarn => {
+          this.loading = false;
           if (katwarn) {
             this.katWarning = katwarn;
           } else {
             this.katWarning = {locationId: locationId} as KatWarning;
           }
+        }, error => {
+            this.loading = false;
+            this.errorMessage = 'Warnung konnte nicht geladen werden: ' + error.messageText;
         });
     }
   }
@@ -77,29 +83,29 @@ export class KatComponent implements OnInit {
   }
 
   update() {
-    this.progress = true;
-    this.message = '';
+    this.loading = true;
+    this.errorMessage = '';
     this.katwarnService.updateKatWarning(this.katWarning).subscribe(
-      result => { this.router.navigate(['../..'],{relativeTo: this.route}); },
-      error => { this.message = 'Fehler beim Aktualisiern der Warnung:' + error.statusText; this.progress = false; }
+      result => { this.loading = false; this.errorMessage = ''; },
+      error => { this.errorMessage = 'Fehler beim Aktualisiern der Warnung:' + error.statusText; this.loading = false; }
     );
   }
 
   cancel() {
-    this.progress = true;
-    this.message = '';
+    this.loading = true;
+    this.errorMessage = '';
     this.katwarnService.deleteKatWarning(this.katWarning).subscribe(
       result => { this.router.navigate(['../..'],{relativeTo: this.route}); },
-      error => { this.message = 'Fehler beim Aufheben der Warnung:' + error.statusText; this.progress = false; }
+      error => { this.errorMessage = 'Fehler beim Aufheben der Warnung:' + error.statusText; this.loading = false; }
       );
   }
 
   create() {
-    this.progress = true;
-    this.message = '';
+    this.loading = true;
+    this.errorMessage = '';
     this.katwarnService.createKatWarning(this.katWarning).subscribe(
       result => { this.router.navigate(['../..'], {relativeTo: this.route}); },
-      error => { this.message = 'Fehler beim Anlegen der Warnung:' + error.statusText; this.progress = false; }
+      error => { this.errorMessage = 'Fehler beim Anlegen der Warnung:' + error.statusText; this.loading = false; }
     );
   }
 
