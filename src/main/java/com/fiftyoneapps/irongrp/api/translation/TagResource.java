@@ -1,6 +1,5 @@
 package com.fiftyoneapps.irongrp.api.translation;
 
-import com.fiftyoneapps.irongrp.service.hero.model.Hero;
 import com.fiftyoneapps.irongrp.service.translation.TranslationService;
 import com.fiftyoneapps.irongrp.service.translation.model.TranslationTag;
 import org.springframework.beans.factory.annotation.Autowired;
