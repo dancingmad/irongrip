@@ -2,12 +2,14 @@ package com.fiftyoneapps.irongrp.api.translation;
 
 import com.fiftyoneapps.irongrp.service.exception.GeneralException;
 import com.fiftyoneapps.irongrp.service.exception.ResourceAlreadyExistingException;
+import com.fiftyoneapps.irongrp.service.exception.ResourceMissingException;
 import com.fiftyoneapps.irongrp.service.translation.TranslationService;
 import com.fiftyoneapps.irongrp.service.translation.model.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/course")
@@ -22,11 +24,11 @@ public class CourseResource {
     }
 
     @RequestMapping(value = "/{courseId}", method = RequestMethod.PUT)
-    public Course saveCourse(@RequestParam Long courseId, @RequestBody Course course) {
+    public Course updateCourse(@PathVariable Long courseId, @RequestBody Course course) {
         if (!courseId.equals(course.getId())) {
             throw new GeneralException("Id mismatch for course to be updated");
         }
-        return translationService.saveCourse(course);
+        return translationService.updateCourse(course);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
@@ -39,7 +41,16 @@ public class CourseResource {
 
     @RequestMapping(value = "/{courseId}", method = RequestMethod.DELETE)
     public void deleteCourse(@RequestParam Long courseId) {
-        translationService.deleteChapter(courseId);
+        translationService.deleteCourse(courseId);
+    }
+
+    @RequestMapping(value = "/{courseId}", method = RequestMethod.GET)
+    public Course getCourse(@PathVariable Long courseId) {
+        Optional<Course> courseOptional = translationService.getCourse(courseId);
+        if (!courseOptional.isPresent()) {
+            throw new ResourceMissingException("Course with id "+ courseId +" not found");
+        }
+        return courseOptional.get();
     }
 
 }

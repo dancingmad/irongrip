@@ -22,6 +22,10 @@ export class NotyService {
     this.notyStream.next(new Noty(errorMessage, NotyType.ERROR));
   }
 
+  addSuccess(successMessage:string) {
+    this.notyStream.next(new Noty(successMessage, NotyType.INFO));
+  }
+
   getNotys():Observable<Noty> {
     return this.notyStream.asObservable();
   }

@@ -3,6 +3,7 @@ package com.fiftyoneapps.irongrp.service.translation;
 import com.fiftyoneapps.irongrp.service.translation.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,28 +21,22 @@ public class TranslationService {
     @Autowired
     private TranslationTagRepository translationTagRepository;
 
+    public Optional<Course> getCourse(Long id) {
+        return courseRepository.findById(id);
+    }
+
+    public Optional<Chapter> getChapter(Long id) {
+        return chapterRepository.findById(id,2);
+    }
+
+    public Optional<Translation> getTranslation(Long id) {
+        return translationRepository.findById(id);
+    }
+
     public Course saveCourse(Course course) {
         return courseRepository.save(course);
     }
 
-    public void saveChapter(Chapter chapter) {
-        chapterRepository.save(chapter);
-    }
-
-    public Chapter addChapter(Chapter chapter) {
-        if (chapter.getId() != null) {
-            return chapter;
-        }
-        if (chapter.getCourse() == null) {
-            throw new RuntimeException("missing Course for chapter");
-        }
-        chapter = chapterRepository.save(chapter);
-        Course course = courseRepository
-                .findById(chapter.getCourse().getId()).get();
-
-        course.getChapters().add(chapter);
-        return chapter;
-    }
 
     public Translation saveTranslation(Translation translation) {
         return translationRepository.save(translation);
@@ -71,28 +66,24 @@ public class TranslationService {
         translationTagRepository.deleteById(id);
     }
 
-    public void deleteChapter(Long id) {
-        Optional<Chapter> optionalChapter = chapterRepository.findById(id);
-        if (!optionalChapter.isPresent()) {
-            throw new RuntimeException("Chapter with id "+id+" does not exist");
-        }
-        Chapter chapter = optionalChapter.get();
-        if (chapter.getCourse() != null) {
-            Course course = chapter.getCourse();
-            if (course.getChapters() != null) {
-                course.getChapters().remove(chapter);
-                courseRepository.save(course);
-            }
-        }
-        chapterRepository.delete(chapter);
-    }
 
+    @Transactional
     public void deleteCourse(Long id) {
         Course course = courseRepository.findById(id).get();
         course.getChapters().forEach(chapterRepository::delete);
         courseRepository.delete(course);
     }
 
+    @Transactional
+    public Course updateCourse(Course course) {
+        // TODO make sure to remove orphans of both chapters and translations in a clever way
+        return courseRepository.save(course);
+    }
+
+    @Transactional
+    public Chapter updateChapter(Chapter chapter) {
+        return chapterRepository.save(chapter);
+    }
 
     public List<Course> listCourses() {
         List<Course> courses = new ArrayList<>();

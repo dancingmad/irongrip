@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {UserService} from '../services/user.service';
+import {UserService} from '../../services/user.service';
 import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
-import {NotyService} from '../services/noty.service';
+import {NotyService} from '../../services/noty.service';
 
 @Component({
   selector: 'app-login',

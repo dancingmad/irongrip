@@ -1,0 +1,54 @@
+<div *ngIf="course" class="row">
+  <div class="col">
+    <div class="row">
+      <div class="col">
+        Course:
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <input type="text" class="form-control" [(ngModel)]="course.name">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+       Language:
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <select class="form-control" [(ngModel)]="course.language">
+          <option *ngFor="let language of languages" [value]="language">{{ 'language.'+language | translate}}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        Chapters:
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+         <a class="btn btn-outline-light material-icons" (click)="addChapter()">add</a>
+      </div>
+    </div>
+    <div *ngFor="let chapter of course.chapters" class="row">
+      <div class="col">
+        <input type="text" class="form-control" [(ngModel)]="chapter.name">
+      </div>
+      <div class="col">
+        <a class="btn btn-outline-light material-icons" (click)="removeChapter(chapter)">cancel</a>
+      </div>
+    </div>
+    <div class="row mt-5">
+      <div class="col">
+        <div class="btn-group btn-group-lg">
+          <a class="btn btn-lg btn-outline-info material-icons" routerLink="/translations">chevron_left</a>
+          <button [disabled]="saving" class="btn btn-lg btn-outline-info" (click)="save()">Save</button>
+        </div>
+      </div>
+      <div class="col">
+      </div>
+    </div>
+  </div>
+</div>

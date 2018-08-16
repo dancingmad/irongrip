@@ -1,13 +1,13 @@
 package com.fiftyoneapps.irongrp.api.translation;
 
+import com.fiftyoneapps.irongrp.service.exception.GeneralException;
+import com.fiftyoneapps.irongrp.service.exception.ResourceMissingException;
 import com.fiftyoneapps.irongrp.service.translation.TranslationService;
 import com.fiftyoneapps.irongrp.service.translation.model.Chapter;
-import com.fiftyoneapps.irongrp.service.translation.model.Course;
-import com.fiftyoneapps.irongrp.service.translation.model.TranslationTag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/chapter")
@@ -16,24 +16,20 @@ public class ChapterResource {
     @Autowired
     private TranslationService translationService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public List<Chapter> list() {
-        return translationService.listChapters();
+    @RequestMapping(value = "/{chapterId}", method = RequestMethod.PUT)
+    public Chapter updateChapter(@PathVariable Long chapterId, @RequestBody Chapter chapter) {
+        if (!chapterId.equals(chapter.getId())) {
+            throw new GeneralException("Id mismatch for chapter to be updated");
+        }
+        return translationService.updateChapter(chapter);
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public void changeChapter(@RequestBody Chapter chapter) {
-        translationService.saveChapter(chapter);
+    @RequestMapping(value = "/{chapterId}", method = RequestMethod.GET)
+    public Chapter getChapter(@PathVariable Long chapterId) {
+        Optional<Chapter> chapterOptional = translationService.getChapter(chapterId);
+        if (!chapterOptional.isPresent()) {
+            throw new ResourceMissingException("Chapter with id "+ chapterId +" not found");
+        }
+        return chapterOptional.get();
     }
-
-    @RequestMapping(value = "/", method = RequestMethod.POST)
-    public Chapter addChapter(@RequestBody Chapter chapter) {
-        return translationService.addChapter(chapter);
-    }
-
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable Long id) {
-        translationService.deleteChapter(id);
-    }
-
 }

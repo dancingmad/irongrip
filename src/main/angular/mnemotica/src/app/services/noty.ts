@@ -8,9 +8,9 @@ export class Noty {
     this.type = type;
 
     switch (type) {
-      case NotyType.ERROR: this.cssClass = 'alert-danger';
-      case NotyType.INFO: this.cssClass = 'alert-success';
-      case NotyType.WARNING: this.cssClass = 'alert-warning';
+      case NotyType.ERROR: this.cssClass = 'alert-danger'; break;
+      case NotyType.INFO: this.cssClass = 'alert-success'; break;
+      case NotyType.WARNING: this.cssClass = 'alert-warning'; break;
     }
 
   }

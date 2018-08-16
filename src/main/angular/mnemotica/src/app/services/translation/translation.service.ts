@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {NotyService} from '../noty.service';
-import {Observable} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
 import {Course} from './course';
 import {Chapter} from './chapter';
 import {Translation} from './translation';
 import {TranslationTag} from './translationtag';
-import {catchError} from 'rxjs/operators';
+import {catchError, finalize, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +18,8 @@ export class TranslationService {
   private translationUrl = '/api/translation';
   private translationTagUrl = '/api/tag';
 
+  private loading = new Subject<Boolean>();
+
   httpOptions = {
     headers: new HttpHeaders({'Content-Type': 'application/json'})
   };
@@ -26,9 +28,15 @@ export class TranslationService {
               private notyService: NotyService) {
   }
 
+  getLoadingListener(): Observable<Boolean> {
+    return this.loading.asObservable();
+  }
+
   listCourses():Observable<Course[]> {
     return this.http.get<Course[]>(this.courseUrl+'/').pipe(
-      catchError(this.notyService.handleError('Could not fetch Courses',[]))
+      tap(() => this.loading.next(true)),
+      catchError(this.notyService.handleError('Could not fetch Courses',[])),
+      finalize(() => this.loading.next(false))
     );
   }
 
@@ -36,6 +44,26 @@ export class TranslationService {
     // POST for adding entity to collection, it is NOT idempotent
     return this.http.post<Course>(this.courseUrl+'/',course).pipe(
       catchError(this.notyService.handleError('Could not add Course'))
+    );
+  }
+
+  getCourse(id:number):Observable<Course> {
+    return this.http.get<Course>(this.courseUrl+'/'+id).pipe(
+      catchError(this.notyService.handleError('Could not find Course'))
+    );
+  }
+
+  getTranslation(id:number):Observable<Translation> {
+    return this.http.get<Translation>(this.translationUrl+'/'+id).pipe(
+      catchError(this.notyService.handleError('Could not find Translation'))
+    );
+  }
+
+  updateCourse(course:Course):Observable<Course> {
+    return this.http.put<Course>(this.courseUrl+'/'+course.id,course).pipe(
+      tap(() => this.loading.next(true)),
+      catchError(this.notyService.handleError('Could not update Course')),
+      finalize(() => this.loading.next(false))
     );
   }
 
@@ -61,13 +89,6 @@ export class TranslationService {
   deleteChapter(chapter:Chapter):Observable<Chapter> {
     return this.http.delete<Chapter>(this.chapterUrl+'/'+chapter.id).pipe(
       catchError(this.notyService.handleError('Could not delete Chapter'))
-    );
-  }
-
-  listTranslations():Observable<Translation[]> {
-    // TODO  add query params for limit, sort order and filters since we will get all translations otherwise
-    return this.http.get<Translation[]>(this.translationUrl+'/').pipe(
-      catchError(this.notyService.handleError('Could not fetch Translations',[]))
     );
   }
 
@@ -100,4 +121,9 @@ export class TranslationService {
     return ['JAPANESE_KANJI', 'JAPANESE_KANA', 'JAPANESE_ROMAJI', 'ENGLISH', 'SWEDISH', 'GERMAN', 'DUTCH'];
   }
 
+  getChapter(id: number):Observable<Chapter> {
+    return this.http.get<Chapter>(this.chapterUrl+'/'+id).pipe(
+      catchError(this.notyService.handleError('Could not find Chapter'))
+    );
+  }
 }

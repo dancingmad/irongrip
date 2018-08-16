@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-2">{{'translations.course' | translate}}</div>
+  <div class="col-5">
+    <div class="input-group">
+      <select class="form-control" [(ngModel)]="selectedCourse" (change)="changeCourse(course)">
+        <option *ngFor="let course of courses" [ngValue]="course">
+          {{course.name}} ({{'language.'+course.language | translate}})
+        </option>
+      </select>
+      <div class="input-group-append">
+          <a *ngIf="selectedCourse" class="material-icons btn btn-outline-info" routerLink="/course/{{selectedCourse.id}}">create</a>
+          <a class="material-icons btn btn-outline-info" routerLink="/course/new">add</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-2">{{'translations.chapter' | translate}}</div>
+  <div class="col-5">
+    <select *ngIf="selectedCourse" class="form-control" [(ngModel)]="selectedChapter" (change)="refreshChapter()">
+      <option *ngFor="let chapter of selectedCourse.chapters" [ngValue]="chapter">{{chapter.name}}</option>
+    </select>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-2">{{'translations.language' | translate}}</div>
+  <div class="col-5">
+    <select class="form-control" [(ngModel)]="selectedLanguage">
+      <option *ngFor="let language of languages" [value]="language">{{ 'language.'+language | translate}}</option>
+    </select>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col"><button (click)="add()">Add</button></div>
+</div>
+<div class="row mt-2" *ngIf="selectedChapter && selectedLanguage">
+  <table class="table translation">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">{{'translations.table.translation' | translate}}</th>
+        <th scope="col">{{'translations.table.translates' | translate}}</th>
+        <th scope="col">{{'translations.table.hint' | translate}}</th>
+        <th scope="col">{{'translations.table.phrase' | translate}}</th>
+        <th scope="col">{{'translations.table.tags' | translate}}</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody class="table-hover">
+      <tr app-translationentry [translation]="translation" [language]="selectedLanguage" *ngFor="let translation of selectedChapter.translations"
+          (finishedEditEvent)="finishedEdit($event,translation)"
+          (removeTranslationEvent)="removeTranslation(translation)"></tr>
+    </tbody>
+  </table>
+</div>

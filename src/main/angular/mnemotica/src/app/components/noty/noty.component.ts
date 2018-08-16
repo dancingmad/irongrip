@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {NotyService} from '../services/noty.service';
-import {Noty, NotyType} from '../services/noty';
+import {NotyService} from '../../services/noty.service';
+import {Noty, NotyType} from '../../services/noty';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({

@@ -1,5 +1,7 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fiftyoneapps.irongrp.service.translation.Language;
 import com.fiftyoneapps.irongrp.service.user.model.User;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NodeEntity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Course {
 
     @Id
@@ -17,6 +20,8 @@ public class Course {
     private Long id;
 
     private String name;
+
+    private Language language;
 
     @Relationship(type = "previous")
     private Course previousCourse;
@@ -27,6 +32,9 @@ public class Course {
     @Relationship(type = "contains")
     private List<Chapter> chapters;
 
+    @Relationship(type = "created_by")
+    private User createdBy;
+
     public List<Chapter> getChapters() {
         if (chapters == null) {
             chapters = new ArrayList<>();
@@ -36,6 +44,14 @@ public class Course {
 
     public void setChapters(List<Chapter> chapters) {
         this.chapters = chapters;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
     }
 
     public Long getId() {
@@ -64,5 +80,13 @@ public class Course {
 
     public void setNextCourse(Course nextCourse) {
         this.nextCourse = nextCourse;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 }

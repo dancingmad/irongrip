@@ -1,5 +1,6 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fiftyoneapps.irongrp.service.translation.Language;
 import com.fiftyoneapps.irongrp.service.user.model.User;
 import org.neo4j.ogm.annotation.GeneratedValue;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NodeEntity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Translation {
 
     @Id

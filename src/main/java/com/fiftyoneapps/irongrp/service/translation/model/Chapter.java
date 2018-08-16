@@ -1,5 +1,6 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
+import com.fiftyoneapps.irongrp.service.user.model.User;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -18,6 +19,7 @@ public class Chapter {
     private String name;
 
     @Relationship(type = "contains")
+
     private List<Translation> translations;
 
     @Relationship(type = "previous")
@@ -26,15 +28,15 @@ public class Chapter {
     @Relationship(type = "next")
     private Chapter next;
 
-    @Relationship(type = "belongs")
-    private Course course;
+    @Relationship(type = "created_by")
+    private User createdBy;
 
-    public Course getCourse() {
-        return course;
+    public User getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Long getId() {
