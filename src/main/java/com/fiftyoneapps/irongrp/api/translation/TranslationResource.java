@@ -1,13 +1,10 @@
 package com.fiftyoneapps.irongrp.api.translation;
 
+import com.fiftyoneapps.irongrp.service.exception.GeneralException;
 import com.fiftyoneapps.irongrp.service.translation.TranslationService;
 import com.fiftyoneapps.irongrp.service.translation.model.Translation;
-import com.fiftyoneapps.irongrp.service.translation.model.TranslationTag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,9 +20,18 @@ public class TranslationResource {
         return translationService.saveTranslation(translation);
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public Translation changeTranslation(@RequestBody Translation translation) {
+    @RequestMapping(value = "/{translationId}", method = RequestMethod.PUT)
+    public Translation changeTranslation(@PathVariable Long translationId,
+                                         @RequestBody Translation translation) {
+        if (!translationId.equals(translation.getId())) {
+            throw new GeneralException("Id mismatch");
+        }
         return translationService.saveTranslation(translation);
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public List<Translation> listTranslations() {
+        return translationService.listTranslations();
     }
 
 

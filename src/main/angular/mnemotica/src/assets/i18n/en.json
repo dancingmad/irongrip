@@ -1,0 +1,31 @@
+{
+  "application": {
+    "title": "Mnemotica"
+  },
+  "main": {
+    "welcome": "Welcome {{username}}!",
+    "logged_in": "You are logged in as",
+    "logout": "Logout"
+  },
+  "translations": {
+    "course": "Course",
+    "chapter": "Chapter",
+    "language": "Translate To",
+    "table": {
+      "translation": "Translation",
+      "translates": "Translates To",
+      "hint": "Hint",
+      "phrase": "Phrase",
+      "tags": "Tags"
+    }
+  },
+  "language": {
+    "GERMAN": "German",
+    "SWEDISH": "Swedish",
+    "JAPANESE_KANJI": "Japanese (Kanji)",
+    "JAPANESE_KANA": "Japanese (Kana)",
+    "JAPANESE_ROMAJI": "Japanese (Romaji)",
+    "ENGLISH": "English",
+    "DUTCH": "Dutch"
+  }
+}

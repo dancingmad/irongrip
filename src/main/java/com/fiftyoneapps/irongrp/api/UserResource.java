@@ -28,6 +28,13 @@ public class UserResource {
         return user;
     }
 
+    @RequestMapping(path = "/logout", method = RequestMethod.GET)
+    public User authenticate(HttpServletRequest request) {
+        User user = getLoggedInUser(request);
+        request.getSession().removeAttribute(SESSION_USERNAME);
+        return user;
+    }
+
     @RequestMapping(path = "/", method = RequestMethod.GET)
     public User getLoggedInUser(HttpServletRequest request) {
         String sessionUser = (String)request.getSession().getAttribute(SESSION_USERNAME);

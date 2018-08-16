@@ -1,6 +1,86 @@
-<p *ngIf="user">
-  Welcome {{user.username}}!
-</p>
-<p *ngIf="!user">
-  Not logged in! Please use <a routerLink="login">Login</a>
-</p>
+<div class="row">
+  <div class="col-2">{{'translations.course' | translate}}</div>
+  <div class="col-3">
+    <div class="input-group">
+      <select class="form-control">
+        <option value="A1" selected>A1</option>
+        <option value="A1">A2</option>
+      </select>
+      <div class="input-group-append">
+          <button class="material-icons btn btn-outline-info">create</button>
+          <button class="material-icons btn btn-outline-info">add</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-2">{{'translations.chapter' | translate}}</div>
+  <div class="col-3">
+    <select class="form-control">
+      <option value="1" selected>1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="6">7</option>
+    </select>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-2">{{'translations.language' | translate}}</div>
+  <div class="col-3">
+    <select class="form-control">
+      <option *ngFor="let language of languages" value="{{language}}">{{ 'language.'+language | translate}}</option>
+    </select>
+  </div>
+</div>
+<div class="row mt-2">
+  <table class="table">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">{{'translations.table.translation' | translate}}</th>
+        <th scope="col">{{'translations.table.translates' | translate}}</th>
+        <th scope="col">{{'translations.table.hint' | translate}}</th>
+        <th scope="col">{{'translations.table.phrase' | translate}}</th>
+        <th scope="col">{{'translations.table.tags' | translate}}</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody class="table-hover">
+        <tr>
+          <td>
+            <input type="text" class="form-control form-control-sm">
+          </td>
+          <td>
+            <input type="text" class="form-control form-control-sm">
+          </td>
+          <td>
+            <input type="text" class="form-control form-control-sm">
+          </td>
+          <td>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-sm">
+              <div class="input-group-append">
+                <button class="material-icons btn btn-outline-dark">add</button>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control form-control-sm">
+              <div class="input-group-append">
+                <button class="material-icons btn btn-outline-dark">add</button>
+              </div>
+            </div>
+          </td>
+          <td>
+            <div class="btn-group" role="group">
+              <button class="material-icons btn btn-outline-info btn-sm">done</button>
+              <button class="material-icons btn btn-outline-info btn-sm">clear</button>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+</div>

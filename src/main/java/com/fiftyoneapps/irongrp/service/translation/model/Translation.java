@@ -26,8 +26,6 @@ public class Translation {
 
     private String hint;
 
-    private String unicodeHint;
-
     @Relationship(type = "usedIn")
     private List<Translation> phrases;
 
@@ -85,14 +83,6 @@ public class Translation {
 
     public void setHint(String hint) {
         this.hint = hint;
-    }
-
-    public String getUnicodeHint() {
-        return unicodeHint;
-    }
-
-    public void setUnicodeHint(String unicodeHint) {
-        this.unicodeHint = unicodeHint;
     }
 
     public List<Translation> getPhrases() {

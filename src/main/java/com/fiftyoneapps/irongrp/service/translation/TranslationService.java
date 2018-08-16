@@ -38,6 +38,7 @@ public class TranslationService {
         chapter = chapterRepository.save(chapter);
         Course course = courseRepository
                 .findById(chapter.getCourse().getId()).get();
+
         course.getChapters().add(chapter);
         return chapter;
     }
@@ -99,5 +100,10 @@ public class TranslationService {
         return courses;
     }
 
+    public List<Translation> listTranslations() {
+        List<Translation> translations = new ArrayList<>();
+        translationRepository.findAll().forEach(translations::add);
+        return translations;
+    }
 
 }
