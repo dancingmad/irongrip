@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col">Username</div>
+  <div class="col">{{user.username}}</div>
+</div>
+<div class="row">
+  <div class="col">Language</div>
+  <div class="col">
+    <select class="form-control" [(ngModel)]="language" (change)="onChangeLanguage()" >
+      <option value="en">{{'language.ENGLISH' | translate}}</option>
+      <option value="de">{{'language.GERMAN' | translate}}</option>
+    </select>
+  </div>
+</div>
