@@ -1,4 +1,4 @@
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+
 
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -20,6 +20,7 @@ import { HomeComponent } from './components/translation/home/home.component';
 import { CourseComponent } from './components/translation/course/course.component';
 import { TranslationentryComponent } from './components/translation/translationentry/translationentry.component';
 import {FilterLanguagePipe} from './components/translation/translations/filter-language.pipe';
+import {BsDropdownModule, TypeaheadModule}from 'ngx-bootstrap';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -39,12 +40,13 @@ export function createTranslateLoader(http: HttpClient) {
     FilterLanguagePipe
   ],
   imports: [
-    NgbModule,
     BrowserModule,
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    BsDropdownModule.forRoot(),
+    TypeaheadModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

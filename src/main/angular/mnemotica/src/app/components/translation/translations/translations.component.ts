@@ -6,6 +6,7 @@ import {Observable} from 'rxjs';
 import {TranslationService} from '../../../services/translation/translation.service';
 import {Course} from '../../../services/translation/course';
 import {Chapter} from '../../../services/translation/chapter';
+import {TranslationTag}from '../../../services/translation/translationtag';
 
 @Component({
   selector: 'app-translations',
@@ -44,6 +45,10 @@ export class TranslationsComponent implements OnInit {
     t.edit = true;
     t.language = this.selectedCourse.language;
     t.createdBy = this.user;
+    t.translatesTo = [];
+    t.translatesTo.push({language:this.selectedLanguage, createdBy:this.user} as Translation);
+    t.phrases = [];
+    t.tags = [];
     this.selectedChapter.translations.push(t);
   }
 
@@ -60,12 +65,6 @@ export class TranslationsComponent implements OnInit {
         }
       );
     }
-  }
-
-  delete(translation:Translation) {
-    this.translationService.deleteTranslation(translation).subscribe(
-      () => this.removeTranslation(translation)
-    );
   }
 
   changeCourse() {

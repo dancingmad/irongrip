@@ -9,13 +9,17 @@
     <div class="row shadow-sm headline">
       <div class="col-4 m-2 text-left"><h1>{{ 'application.title' | translate }}</h1></div>
       <div class="col m-2 text-right"></div>
-        <div class="col-1 m-2 text-right">
-          <div *ngIf="user" ngbDropdown placement="bottom-right" class="d-inline-block">
-            <button class="btn btn-outline-primary material-icons" id="userDropdown" ngbDropdownToggle>person</button>
-            <div ngbDropdownMenu aria-labelledby="userDropdown">
-              <a class="dropdown-item" routerLink="/profile">Profile</a>
-              <button class="dropdown-item" (click)="logout()">Logout</button>
-            </div>
+      <div class="col-2 m-2 text-right">
+        <div *ngIf="user" class="btn-group" dropdown>
+          <button dropdownToggle type="button" class="btn btn-primary dropdown-toggle material-icons"
+                  aria-controls="dropdown-basic">person<span class="caret"></span>
+          </button>
+          <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu"
+              role="menu" aria-labelledby="button-basic">
+            <li role="menuitem"><a class="dropdown-item" routerLink="/profile">Profile</a></li>
+            <li class="divider dropdown-divider"></li>
+            <li role="menuitem"><a class="dropdown-item" (click)="logout()">Logout</a></li>
+          </ul>
           </div>
         </div>
     </div>

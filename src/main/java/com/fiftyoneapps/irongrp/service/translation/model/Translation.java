@@ -37,14 +37,16 @@ public class Translation {
     @Relationship(type = "created_by")
     private User createdBy;
 
+    public Translation() {
+        this.phrases = new ArrayList<>();
+        this.tags = new ArrayList<>();
+    }
+
     public Long getId() {
         return id;
     }
 
     public List<TranslationTag> getTags() {
-        if (tags == null) {
-            tags = new ArrayList<>();
-        }
         return tags;
     }
 
@@ -88,9 +90,6 @@ public class Translation {
     }
 
     public List<Translation> getPhrases() {
-        if (phrases == null) {
-            phrases = new ArrayList<>();
-        }
         return phrases;
     }
 
@@ -104,5 +103,14 @@ public class Translation {
 
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public Translation merge(Translation translation) {
+        this.setTags(translation.getTags());
+        this.setPhrases(translation.getPhrases());
+        this.setTranslation(translation.getTranslation());
+        this.setHint(translation.getHint());
+        this.setTranslatesTo(translation.getTranslatesTo());
+        return this;
     }
 }

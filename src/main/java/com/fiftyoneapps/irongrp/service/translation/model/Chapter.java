@@ -19,14 +19,9 @@ public class Chapter {
     private String name;
 
     @Relationship(type = "contains")
-
     private List<Translation> translations;
 
-    @Relationship(type = "previous")
-    private Chapter previous;
-
-    @Relationship(type = "next")
-    private Chapter next;
+    private int index;
 
     @Relationship(type = "created_by")
     private User createdBy;
@@ -41,6 +36,14 @@ public class Chapter {
 
     public Long getId() {
         return id;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public String getName() {
@@ -62,19 +65,11 @@ public class Chapter {
         this.translations = translations;
     }
 
-    public Chapter getPrevious() {
-        return previous;
+    public Chapter merge(Chapter chapter) {
+        this.translations = chapter.translations;
+        this.name = chapter.name;
+        return this;
     }
 
-    public void setPrevious(Chapter previous) {
-        this.previous = previous;
-    }
 
-    public Chapter getNext() {
-        return next;
-    }
-
-    public void setNext(Chapter next) {
-        this.next = next;
-    }
 }

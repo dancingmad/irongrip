@@ -1,18 +1,21 @@
 package com.fiftyoneapps.irongrp.service.user;
 
 import com.fiftyoneapps.irongrp.service.exception.ResourceAlreadyExistingException;
+import com.fiftyoneapps.irongrp.service.exception.UnauthorizedException;
 import com.fiftyoneapps.irongrp.service.user.model.User;
 import com.fiftyoneapps.irongrp.service.user.model.UserRepository;
 import com.google.common.hash.Hashing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 
 @Service
 public class UserService {
 
-
+    private static final String SESSION_USERNAME = "SESSION_USERNAME";
     private UserRepository userRepository;
 
     @Autowired
@@ -51,4 +54,25 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+
+    public void setUserForRequest(HttpServletRequest request, String username) {
+        request.getSession().setAttribute(SESSION_USERNAME, username);
+    }
+
+    public User getLoggedInUser(HttpServletRequest request) {
+        String sessionUser = (String) request.getSession().getAttribute(SESSION_USERNAME);
+        if (StringUtils.isEmpty(sessionUser)) {
+            throw new UnauthorizedException("Not authenticated!");
+        }
+        User user = getUser(sessionUser);
+        if (user == null) {
+            request.getSession().removeAttribute(SESSION_USERNAME);
+            throw new RuntimeException("Unexpected: Already authenticated User missing from Database");
+        }
+        return user;
+    }
+
+    public void removeUserForRequest(HttpServletRequest request) {
+        request.getSession().removeAttribute(SESSION_USERNAME);
+    }
 }

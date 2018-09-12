@@ -73,24 +73,12 @@ export class TranslationService {
     );
   }
 
-  addChapter(chapter:Chapter):Observable<Chapter> {
-    // POST for adding entity to collection, it is NOT idempotent
-    return this.http.post<Chapter>(this.chapterUrl+'/',chapter).pipe(
-      catchError(this.notyService.handleError('Could not add Chapter'))
-    );
-  }
-
   updateChapter(chapter:Chapter):Observable<Chapter> {
     return this.http.put<Chapter>(this.chapterUrl+'/'+chapter.id,chapter).pipe(
       catchError(this.notyService.handleError('Could not update Chapter'))
     );
   }
 
-  deleteChapter(chapter:Chapter):Observable<Chapter> {
-    return this.http.delete<Chapter>(this.chapterUrl+'/'+chapter.id).pipe(
-      catchError(this.notyService.handleError('Could not delete Chapter'))
-    );
-  }
 
   addTranslation(translation:Translation):Observable<Translation> {
     // POST for adding entity to collection, it is NOT idempotent
@@ -105,15 +93,15 @@ export class TranslationService {
     );
   }
 
-  deleteTranslation(translation:Translation):Observable<Translation> {
-    return this.http.delete<Translation>(this.translationUrl+'/'+translation.id).pipe(
-      catchError(this.notyService.handleError('Could not delete Translation'))
-    );
-  }
-
   listTranslationTags():Observable<TranslationTag[]> {
     return this.http.get<TranslationTag[]>(this.translationTagUrl+'/').pipe(
       catchError(this.notyService.handleError('Could not fetch Translationtags',[]))
+    );
+  }
+
+  addTranslationTag(tag:TranslationTag):Observable<TranslationTag> {
+    return this.http.post<TranslationTag>(this.translationTagUrl+'/',tag).pipe(
+      catchError(this.notyService.handleError('Could not add Tag'))
     );
   }
 

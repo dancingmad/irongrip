@@ -28,7 +28,7 @@ public class TranslationResource {
         if (!translationId.equals(translation.getId())) {
             throw new GeneralException("Id mismatch");
         }
-        return translationService.saveTranslation(translation);
+        return translationService.updateTranslation(translation);
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)

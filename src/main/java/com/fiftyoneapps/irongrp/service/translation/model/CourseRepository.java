@@ -1,6 +1,6 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.neo4j.repository.Neo4jRepository;
 
-public interface CourseRepository extends CrudRepository<Course,Long> {
+public interface CourseRepository extends Neo4jRepository<Course, Long> {
 }

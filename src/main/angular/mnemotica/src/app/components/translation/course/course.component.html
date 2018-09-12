@@ -37,7 +37,10 @@
         <input type="text" class="form-control" [(ngModel)]="chapter.name">
       </div>
       <div class="col">
-        <a class="btn btn-outline-light material-icons" (click)="removeChapter(chapter)">cancel</a>
+        <div class="btn-group btn-group-lg">
+          <a class="btn btn-outline-light material-icons" (click)="moveChapterUp(chapter)">arrow_upward</a>
+          <a class="btn btn-outline-light material-icons" (click)="removeChapter(chapter)">cancel</a>
+        </div>
       </div>
     </div>
     <div class="row mt-5">

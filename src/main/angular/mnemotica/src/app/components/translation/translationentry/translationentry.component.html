@@ -1,56 +1,55 @@
-<td *ngIf="translation.edit">
+<td *ngIf="translation.edit" class="translation">
   <input type="text" class="form-control form-control-sm" name="translation" [(ngModel)]="translation.translation">
 </td>
-<td *ngIf="translation.edit">
+<td *ngIf="translation.edit" class="translates">
   <div *ngFor="let translates of translation.translatesTo | filterLanguage:selectedLanguage" class="row">
     <div class="col">
       <input type="text" class="form-control form-control-sm" name="translatesTo" [(ngModel)]="translates.translation">
     </div>
   </div>
 </td>
-<td *ngIf="translation.edit">
+<td *ngIf="translation.edit" class="hint">
   <input type="text" class="form-control form-control-sm" name="hint" [(ngModel)]="translation.hint">
 </td>
-<td *ngIf="translation.edit">
+<td *ngIf="translation.edit" class="phrase">
   <div class="row">
     <div class="col">
     <div class="input-group input-group-sm">
-      <input type="text" class="form-control form-control-sm" name="phrase">
+      <input type="text" class="form-control form-control-sm" [(ngModel)]="phraseInput">
       <div class="input-group-append">
         <button class="material-icons btn btn-outline-dark" (click)="addToPhrases()">add</button>
       </div>
     </div>
     </div>
   </div>
-  <div class="row mt-1">
-    <div class="col-9 text-truncate" style="font-size:0.7em">
-      This is some phrase test, try this at home.
+  <div class="row mt-1" *ngFor="let phrase of translation.phrases">
+    <div class="col">
+      <button class="tag" (click)="deletePhrase(phrase)">{{phrase.translation}}
+        <i class="material-icons">highlight_off</i>
+      </button>
     </div>
-    <div class="col"><button class="material-icons btn btn-sm btn-light">delete</button></div>
-  </div>
-  <div class="row mt-1">
-    <div class="col-9 text-truncate" style="font-size:0.7em">
-       This is some other phrase, it could actually be much longer than you would expect.
-    </div>
-    <div class="col"><button class="material-icons btn btn-sm btn-light">delete</button></div>
   </div>
 </td>
-<td *ngIf="translation.edit">
+<td *ngIf="translation.edit" class="tag">
   <div class="row">
   <div class="input-group input-group-sm">
-    <input type="text" class="form-control form-control-sm" name="tag">
+    <input type="text" class="form-control form-control-sm" name="tag"
+           [(ngModel)]="tagInput"
+           [typeahead]="getAvailableTags()"
+           [typeaheadMinLength]="0"
+           (typeaheadOnSelect)="addToTags($event.value)"
+           typeaheadOptionField="name">
     <div class="input-group-append">
-      <button class="material-icons btn btn-outline-dark" (click)="addToTags()">add</button>
+      <button class="material-icons btn btn-outline-dark" (click)="addToTags(tagInput)">add</button>
     </div>
   </div>
   </div>
   <div class="row mt-1">
-    <div class="col" style="font-size:0.7em">
-      bla bla bla bla bla bla bla bla bla bla bla bla bla
-    </div>
+    <button *ngFor="let tag of translation.tags" class="tag" (click)="deleteTag(tag)">{{tag.name}} <i
+      class="material-icons">highlight_off</i></button>
   </div>
 </td>
-<td *ngIf="translation.edit">
+<td *ngIf="translation.edit" class="actions">
   <div class="btn-group" role="group">
     <button class="material-icons btn btn-outline-info btn-sm" (click)="saveTranslation()">done</button>
     <button class="material-icons btn btn-outline-info btn-sm" (click)="cancelEdit()">clear</button>
@@ -67,10 +66,10 @@
   {{translation.hint}}
 </td>
 <td *ngIf="!translation.edit">
-  <span *ngFor="let phrase of translation.phrases | filterLanguage:selectedLanguage">{{phrase}}</span>
+  <button *ngFor="let phrase of translation.phrases" class="tag">{{phrase.translation}}</button>
 </td>
 <td *ngIf="!translation.edit">
-  <span *ngFor="let tag of translation.tags">{{tag}}</span>
+  <button *ngFor="let tag of translation.tags" class="tag">{{tag.name}}</button>
 </td>
 <td *ngIf="!translation.edit">
   <div class="btn-group" role="group">

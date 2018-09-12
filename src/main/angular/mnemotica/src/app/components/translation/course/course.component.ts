@@ -17,6 +17,12 @@ export class CourseComponent implements OnInit {
   languages: string[];
   saving = false;
 
+  static updateChapterIndex(chapters:Chapter[]) {
+    chapters.forEach( (chapter,index) => {
+      chapter.index = index;
+    });
+  }
+
   constructor(private route:ActivatedRoute,
               private location:Location,
               private translationService:TranslationService,
@@ -37,6 +43,7 @@ export class CourseComponent implements OnInit {
   }
 
   save() {
+    CourseComponent.updateChapterIndex(this.course.chapters);
     if (this.course.id) {
        this.translationService.updateCourse(this.course).subscribe(
          () => this.notyService.addSuccess('Course updated')
@@ -56,7 +63,7 @@ export class CourseComponent implements OnInit {
   }
 
   addChapter() {
-    this.course.chapters.push(new Chapter());
+    this.course.chapters.push({} as Chapter);
   }
 
   removeChapter(chapter:Chapter) {
@@ -65,6 +72,15 @@ export class CourseComponent implements OnInit {
         this.course.chapters.splice(index,1);
       }
     });
+  }
+
+  moveChapterUp(chapter:Chapter) {
+    const idx = this.course.chapters.indexOf(chapter);
+    if (idx <= 0) {
+      return;
+    }
+    this.course.chapters.splice(idx-1,0,chapter);
+    this.course.chapters.splice(idx+1,1);
   }
 
 }

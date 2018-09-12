@@ -4,12 +4,15 @@ import com.fiftyoneapps.irongrp.service.exception.GeneralException;
 import com.fiftyoneapps.irongrp.service.exception.ResourceAlreadyExistingException;
 import com.fiftyoneapps.irongrp.service.exception.ResourceMissingException;
 import com.fiftyoneapps.irongrp.service.translation.TranslationService;
+import com.fiftyoneapps.irongrp.service.translation.model.Chapter;
 import com.fiftyoneapps.irongrp.service.translation.model.Course;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/course")
@@ -28,7 +31,7 @@ public class CourseResource {
         if (!courseId.equals(course.getId())) {
             throw new GeneralException("Id mismatch for course to be updated");
         }
-        return translationService.updateCourse(course);
+        return sortCourseChapters(translationService.updateCourse(course));
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
@@ -36,7 +39,7 @@ public class CourseResource {
         if (course.getId() != null) {
             throw new ResourceAlreadyExistingException("Course is already persisted");
         }
-        return translationService.saveCourse(course);
+        return sortCourseChapters(translationService.saveCourse(course));
     }
 
     @RequestMapping(value = "/{courseId}", method = RequestMethod.DELETE)
@@ -50,7 +53,15 @@ public class CourseResource {
         if (!courseOptional.isPresent()) {
             throw new ResourceMissingException("Course with id "+ courseId +" not found");
         }
-        return courseOptional.get();
+
+        return sortCourseChapters(courseOptional.get());
+    }
+
+    private Course sortCourseChapters(Course course) {
+        course.setChapters(course.getChapters().stream()
+                .sorted(Comparator.comparingInt(Chapter::getIndex))
+                .collect(Collectors.toList()));
+        return course;
     }
 
 }

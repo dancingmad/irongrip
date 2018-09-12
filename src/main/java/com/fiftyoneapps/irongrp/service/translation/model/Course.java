@@ -23,12 +23,6 @@ public class Course {
 
     private Language language;
 
-    @Relationship(type = "previous")
-    private Course previousCourse;
-
-    @Relationship(type = "next")
-    private Course nextCourse;
-
     @Relationship(type = "contains")
     private List<Chapter> chapters;
 
@@ -66,27 +60,18 @@ public class Course {
         this.name = name;
     }
 
-    public Course getPreviousCourse() {
-        return previousCourse;
-    }
-
-    public void setPreviousCourse(Course previousCourse) {
-        this.previousCourse = previousCourse;
-    }
-
-    public Course getNextCourse() {
-        return nextCourse;
-    }
-
-    public void setNextCourse(Course nextCourse) {
-        this.nextCourse = nextCourse;
-    }
-
     public User getCreatedBy() {
         return createdBy;
     }
 
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public Course merge(Course course) {
+        this.chapters = course.chapters;
+        this.language = course.language;
+        this.name = course.name;
+        return this;
     }
 }

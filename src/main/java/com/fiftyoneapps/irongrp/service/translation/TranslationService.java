@@ -1,5 +1,6 @@
 package com.fiftyoneapps.irongrp.service.translation;
 
+import com.fiftyoneapps.irongrp.service.exception.ResourceAlreadyExistingException;
 import com.fiftyoneapps.irongrp.service.translation.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class TranslationService {
 
     @Autowired
@@ -26,7 +28,7 @@ public class TranslationService {
     }
 
     public Optional<Chapter> getChapter(Long id) {
-        return chapterRepository.findById(id,2);
+        return chapterRepository.findById(id, 3);
     }
 
     public Optional<Translation> getTranslation(Long id) {
@@ -39,7 +41,18 @@ public class TranslationService {
 
 
     public Translation saveTranslation(Translation translation) {
+        if (translation.getId() != null) {
+            throw new ResourceAlreadyExistingException("Adding Translation with id already existing");
+        }
         return translationRepository.save(translation);
+    }
+
+    public Translation updateTranslation(Translation translation) {
+        return translationRepository.save(
+                translationRepository
+                        .findById(translation.getId())
+                        .get()
+                        .merge(translation));
     }
 
     public TranslationTag saveTag(TranslationTag tag) {
@@ -47,9 +60,7 @@ public class TranslationService {
     }
 
     public List<TranslationTag> listTags() {
-        List<TranslationTag> translationTags = new ArrayList<>();
-        translationTagRepository.findAll().forEach(translationTags::add);
-        return translationTags;
+        return translationTagRepository.findAllUsed();
     }
 
     public List<Chapter> listChapters() {
@@ -67,22 +78,27 @@ public class TranslationService {
     }
 
 
-    @Transactional
+
     public void deleteCourse(Long id) {
         Course course = courseRepository.findById(id).get();
         course.getChapters().forEach(chapterRepository::delete);
         courseRepository.delete(course);
     }
 
-    @Transactional
+
     public Course updateCourse(Course course) {
-        // TODO make sure to remove orphans of both chapters and translations in a clever way
-        return courseRepository.save(course);
+        return courseRepository.save(
+                courseRepository
+                        .findById(course.getId())
+                        .get().merge(course));
     }
 
-    @Transactional
+
     public Chapter updateChapter(Chapter chapter) {
-        return chapterRepository.save(chapter);
+        return chapterRepository.save(
+                chapterRepository.findById(chapter.getId())
+                        .get()
+                        .merge(chapter));
     }
 
     public List<Course> listCourses() {
@@ -95,6 +111,10 @@ public class TranslationService {
         List<Translation> translations = new ArrayList<>();
         translationRepository.findAll().forEach(translations::add);
         return translations;
+    }
+
+    public List<Translation> getTranslationsForTraining(Long configurationId) {
+        return translationRepository.getTranslationsForTraining(configurationId);
     }
 
 }
