@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, ParamMap}from '@angular/router';
 import {Location} from '@angular/common';
-import {Course} from '../../../services/translation/course';
+import {Course}from '../../../services/translation/model/course';
 import {TranslationService} from '../../../services/translation/translation.service';
-import {Chapter} from '../../../services/translation/chapter';
+import {Chapter}from '../../../services/translation/model/chapter';
 import {NotyService} from '../../../services/noty.service';
+import {switchMap}from 'rxjs/operators';
 
 @Component({
   selector: 'app-course',
@@ -16,6 +17,7 @@ export class CourseComponent implements OnInit {
   course: Course;
   languages: string[];
   saving = false;
+  loading: Boolean = false;
 
   static updateChapterIndex(chapters:Chapter[]) {
     chapters.forEach( (chapter,index) => {
@@ -26,27 +28,36 @@ export class CourseComponent implements OnInit {
   constructor(private route:ActivatedRoute,
               private location:Location,
               private translationService:TranslationService,
-              private notyService:NotyService) { }
+              private notyService:NotyService) {
+    translationService.getLoadingListener().subscribe(
+      loading => this.loading = loading
+    );
+  }
 
   ngOnInit() {
     this.languages = this.translationService.listLanguages();
-    if (this.route.snapshot.paramMap.get('id') === 'new') {
-      this.course = new Course();
-      this.course.chapters = [];
-    } else {
-      const id = +this.route.snapshot.paramMap.get('id');
-      this.translationService.getCourse(id).subscribe(
-        course => this.course = course
-      );
-    }
-
+    this.route.paramMap.subscribe(
+      (params) => {
+            if (params.get('id') === 'new') {
+              this.course = new Course();
+              this.course.chapters = [];
+            } else {
+              const id = +this.route.snapshot.paramMap.get('id');
+              this.translationService.getCourse(id).subscribe(
+                course => this.course = course
+              );
+            }
+        });
   }
 
   save() {
     CourseComponent.updateChapterIndex(this.course.chapters);
     if (this.course.id) {
        this.translationService.updateCourse(this.course).subscribe(
-         () => this.notyService.addSuccess('Course updated')
+         () => {
+           this.notyService.addSuccess('Course updated');
+           this.translationService.updateCourseList();
+         }
        );
     } else {
       this.saving = true;
@@ -56,6 +67,7 @@ export class CourseComponent implements OnInit {
           if (course) {
             this.course = course;
             this.notyService.addSuccess('New Course added');
+            this.translationService.updateCourseList();
           }
         }
       );
@@ -81,6 +93,13 @@ export class CourseComponent implements OnInit {
     }
     this.course.chapters.splice(idx-1,0,chapter);
     this.course.chapters.splice(idx+1,1);
+  }
+
+  delete() {
+    this.saving = true;
+    this.translationService.deleteCourse(this.course.id).subscribe(
+      () => this.location.back()
+    );
   }
 
 }

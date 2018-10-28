@@ -1,6 +1,5 @@
 package com.fiftyoneapps.irongrp.service.user.model;
 
-import com.fiftyoneapps.irongrp.service.translation.model.Course;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
@@ -16,7 +15,11 @@ public class User {
     private Long id;
 
     private String username;
-    private String hashedPassword;
+
+    private String language;
+
+    @Relationship(type = "following")
+    private List<User> following;
 
     public Long getId() {
         return id;
@@ -30,11 +33,19 @@ public class User {
         this.username = username;
     }
 
-    public String getHashedPassword() {
-        return hashedPassword;
+    public String getLanguage() {
+        return language;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public List<User> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(List<User> following) {
+        this.following = following;
     }
 }

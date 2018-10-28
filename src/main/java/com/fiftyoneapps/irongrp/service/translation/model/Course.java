@@ -23,10 +23,10 @@ public class Course {
 
     private Language language;
 
-    @Relationship(type = "contains")
+    @Relationship(type = "chapters")
     private List<Chapter> chapters;
 
-    @Relationship(type = "created_by")
+    @Relationship(type = "createdBy")
     private User createdBy;
 
     public List<Chapter> getChapters() {

@@ -1,10 +1,12 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
+import com.fiftyoneapps.irongrp.service.training.model.ChapterStatistics;
 import com.fiftyoneapps.irongrp.service.user.model.User;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.springframework.data.annotation.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +20,16 @@ public class Chapter {
 
     private String name;
 
-    @Relationship(type = "contains")
+    @Relationship(type = "translations")
     private List<Translation> translations;
 
     private int index;
 
-    @Relationship(type = "created_by")
+    @Relationship(type = "createdBy")
     private User createdBy;
+
+    @Transient
+    private ChapterStatistics chapterStatistics;
 
     public User getCreatedBy() {
         return createdBy;
@@ -59,6 +64,14 @@ public class Chapter {
             return new ArrayList<>();
         }
         return translations;
+    }
+
+    public ChapterStatistics getChapterStatistics() {
+        return chapterStatistics;
+    }
+
+    public void setChapterStatistics(ChapterStatistics chapterStatistics) {
+        this.chapterStatistics = chapterStatistics;
     }
 
     public void setTranslations(List<Translation> translations) {

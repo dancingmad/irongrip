@@ -16,11 +16,11 @@ public class TranslationRun {
 
     private Date runAt;
 
-    private boolean hit;
+    private int hit;
 
     private boolean directionTo;
 
-    @Relationship(type = "refers")
+    @Relationship(type = "training")
     private Training training;
 
     public Long getId() {
@@ -35,11 +35,11 @@ public class TranslationRun {
         this.runAt = runAt;
     }
 
-    public boolean isHit() {
+    public int getHit() {
         return hit;
     }
 
-    public void setHit(boolean hit) {
+    public void setHit(int hit) {
         this.hit = hit;
     }
 

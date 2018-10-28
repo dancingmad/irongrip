@@ -1,5 +1,6 @@
 package com.fiftyoneapps.irongrp.service.training.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fiftyoneapps.irongrp.service.translation.model.Translation;
 import com.fiftyoneapps.irongrp.service.user.model.User;
 import org.neo4j.ogm.annotation.GeneratedValue;
@@ -23,16 +24,19 @@ public class Training {
     @Relationship(type = "createdBy")
     private User createdBy;
 
-    @Relationship(type = "configured")
+    @Relationship(type = "configuration")
     private TrainingConfiguration configuration;
 
-    @Relationship(type = "contains")
+    @Relationship(type = "translations")
     private List<Translation> translations;
+
+    @Relationship(type = "result")
+    private TrainingResult result;
+
 
     public Long getId() {
         return id;
     }
-
 
     public Date getStartedAt() {
         return startedAt;
@@ -66,11 +70,20 @@ public class Training {
         this.configuration = configuration;
     }
 
+    @JsonIgnore
     public List<Translation> getTranslations() {
         return translations;
     }
 
     public void setTranslations(List<Translation> translations) {
         this.translations = translations;
+    }
+
+    public TrainingResult getResult() {
+        return result;
+    }
+
+    public void setResult(TrainingResult result) {
+        this.result = result;
     }
 }

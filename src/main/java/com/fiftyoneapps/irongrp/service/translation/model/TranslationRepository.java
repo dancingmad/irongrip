@@ -8,11 +8,13 @@ import java.util.List;
 
 public interface TranslationRepository extends Neo4jRepository<Translation, Long> {
 
-    @Query("MATCH (t:Translation) where not (t)<--() detach delete t")
-    public void deleteUnusedTranslations();
+    @Query("MATCH (t:Translation)-->(u:User) where not (t)<--() and id(u)={userId} detach delete t")
+    void deleteUnusedTranslations(@Param("userId") Long userId);
 
     @Query("MATCH (config:TrainingConfiguration)-->(c:Chapter)-->(t:Translation)" +
-            "-->(tag:TranslationTag)<--(config:TrainingConfiguration) " +
-            "where id(config) = {configurationId} RETURN t")
+            " MATCH (t)-->(tag:TranslationTag)<--(config)" +
+            " WHERE id(config) = {configurationId}" +
+            " RETURN t")
     List<Translation> getTranslationsForTraining(@Param("configurationId") Long configurationId);
+
 }

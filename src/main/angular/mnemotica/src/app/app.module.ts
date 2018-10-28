@@ -20,7 +20,13 @@ import { HomeComponent } from './components/translation/home/home.component';
 import { CourseComponent } from './components/translation/course/course.component';
 import { TranslationentryComponent } from './components/translation/translationentry/translationentry.component';
 import {FilterLanguagePipe} from './components/translation/translations/filter-language.pipe';
-import {BsDropdownModule, TypeaheadModule}from 'ngx-bootstrap';
+import {BsDropdownModule, ProgressbarModule, TypeaheadModule}from 'ngx-bootstrap';
+import {TrainingconfigComponent}from './components/training/trainingconfig/trainingconfig.component';
+import {TrainingComponent}from './components/training/training/training.component';
+import {StatisticsComponent}from './components/training/statistics/statistics.component';
+import {CoursepickerComponent}from './components/translation/coursepicker/coursepicker.component';
+import {TrainingresultComponent}from './components/training/trainingresult/trainingresult.component';
+import {StarIconComponent}from './components/training/trainingconfig/staricon.component';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -37,7 +43,13 @@ export function createTranslateLoader(http: HttpClient) {
     HomeComponent,
     CourseComponent,
     TranslationentryComponent,
-    FilterLanguagePipe
+    FilterLanguagePipe,
+    TrainingconfigComponent,
+    TrainingComponent,
+    StatisticsComponent,
+    CoursepickerComponent,
+    TrainingresultComponent,
+    StarIconComponent
   ],
   imports: [
     BrowserModule,
@@ -47,6 +59,7 @@ export function createTranslateLoader(http: HttpClient) {
     BrowserAnimationsModule,
     BsDropdownModule.forRoot(),
     TypeaheadModule.forRoot(),
+    ProgressbarModule.forRoot(),
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

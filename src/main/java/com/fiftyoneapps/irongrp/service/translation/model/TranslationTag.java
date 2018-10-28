@@ -15,7 +15,7 @@ public class TranslationTag {
 
     private String name;
 
-    @Relationship(type = "created_by")
+    @Relationship(type = "createdBy")
     private User createdBy;
 
     public Long getId() {

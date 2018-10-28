@@ -1,21 +1,23 @@
 package com.fiftyoneapps.irongrp.service.training;
 
+import com.fiftyoneapps.irongrp.service.exception.GeneralException;
 import com.fiftyoneapps.irongrp.service.training.model.*;
 import com.fiftyoneapps.irongrp.service.translation.TranslationService;
 import com.fiftyoneapps.irongrp.service.translation.model.Translation;
 import com.fiftyoneapps.irongrp.service.user.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TrainingService {
 
-    @Autowired
-    private TranslationStatisticsRepository statisticsRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(TrainingService.class);
 
     @Autowired
     private TrainingConfigurationRepository configurationRepository;
@@ -26,112 +28,73 @@ public class TrainingService {
     @Autowired
     private TranslationService translationService;
 
-    public TranslationStatistics getStatistics(User user, Long translationId) {
-        return statisticsRepository.findByUserAndTranslationId(user.getId(), translationId);
-    }
+    @Autowired
+    private TranslationStatisticsService statisticsService;
 
-    public List<Training> getOngoingTrainings(User user) {
-        // only fetch training list for further loading
-        return trainingRepository.findOngoingTrainings(user.getId());
-    }
+    @Autowired
+    private ChapterStatisticsService chapterStatisticsService;
 
-    public List<Translation> fetchNextTranslations(Training training) {
-        TrainingConfiguration configuration = training.getConfiguration();
-        List<Translation> translations;
-        if (configuration.isIterationMode()) {
-            // for iteration mode fetch next translations based on iterationlimit  ordered by last run
-            translations = fetchNextIteration(training);
-        } else {
-            // skill mode, fetch translations
-            translations = fetchNextSkill(training);
-        }
-
-        if (translations.isEmpty()) {
-            training.setEndedAt(new Date());
-            trainingRepository.save(training);
-        }
-        return translations;
-    }
-
-    private List<Translation> fetchNextSkill(Training training) {
-        //TODO: implement me!
-        return null;
-    }
-
-    private List<Translation> fetchNextIteration(Training training) {
-        // get translations ordered by last run having run count less than iterationLimit
-        return statisticsRepository.findNextTranslationWithRunCountOrderedByLastRun(training.getId());
+    public List<Training> findLatestTrainings(User user) {
+        return trainingRepository.findLatestTrainings(user.getId())
+                .parallelStream()
+                .map(id -> trainingRepository.findById(id, 2).orElse(null))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     public Training createTraining(User user, TrainingConfiguration configuration) {
+        if (CollectionUtils.isEmpty(configuration.getTags())) {
+            configuration.setTags(Collections.singletonList(translationService.getEmptyTag()));
+        }
+        if (CollectionUtils.isEmpty(configuration.getChapters())) {
+            throw new GeneralException("No chapters selected for training");
+        }
         configuration = configurationRepository.save(configuration);
-        // fetch all translations for configuration
+        // fetch all translations and add (missing) statistics
         List<Translation> translations = translationService.getTranslationsForTraining(configuration.getId());
-        // persist new training
+        translations.forEach(t -> statisticsService.addStatistics(user, t));
         Training training = new Training();
-        training.setConfiguration(configuration);
         training.setTranslations(translations);
+        training.setConfiguration(configuration);
         training.setStartedAt(new Date());
         training.setCreatedBy(user);
+        training = trainingRepository.save(training);
+        training.setResult(calculateStatistics(training));
         return trainingRepository.save(training);
     }
 
-
-    public void addTranslationRun(User user,
-                                  Training training,
-                                  Translation translation,
-                                  boolean directionTo,
-                                  boolean hit) {
-        // fetch statistics for translation
-        TranslationStatistics stats = getStatistics(user, translation.getId());
-        if (stats == null) {
-            stats = new TranslationStatistics();
-            stats.setUser(user);
-            stats.setTranslation(translation);
-            stats.setSkillLevelFrom(1);
-            stats.setSkillLevelTo(1);
-            stats.setRuns(new ArrayList<>());
-        }
-        TranslationRun run = new TranslationRun();
-        run.setDirectionTo(directionTo);
-        run.setHit(hit);
-        run.setRunAt(new Date());
-        run.setTraining(training);
-        stats.getRuns().add(run);
-        if (hit) {
-            increaseStatsSkill(stats, directionTo);
-        } else {
-            decreaseStatsSkill(stats, directionTo);
-        }
-        statisticsRepository.save(stats);
+    public Optional<Training> getTraining(Long trainingId) {
+        return trainingRepository.findById(trainingId, 2);
     }
 
-    private void increaseStatsSkill(TranslationStatistics stats, boolean directionTo) {
-        if (directionTo) {
-            if (stats.getSkillLevelTo() >= 7) {
-                return;
-            }
-            stats.setSkillLevelTo(stats.getSkillLevelTo() + 1);
-        } else {
-            if (stats.getSkillLevelFrom() >= 7) {
-                return;
-            }
-            stats.setSkillLevelFrom(stats.getSkillLevelFrom() + 1);
+    public Training closeTraining(Long trainingId) {
+        Optional<Training> trainingOptional = trainingRepository.findById(trainingId);
+        if (!trainingOptional.isPresent()) {
+            return null;
         }
+        Training training = trainingOptional.get();
+        training.setEndedAt(new Date());
+        // fetch cumulated stat data for training and attach to training
+        training.setResult(calculateStatistics(training));
+        // update chapter statistics
+        chapterStatisticsService.updateChapterStatistics(training);
+        return trainingRepository.save(training);
     }
 
-    private void decreaseStatsSkill(TranslationStatistics stats, boolean directionTo) {
-        if (directionTo) {
-            if (stats.getSkillLevelTo() <= 1) {
-                return;
-            }
-            stats.setSkillLevelTo(stats.getSkillLevelTo() - 1);
-        } else {
-            if (stats.getSkillLevelFrom() <= 1) {
-                return;
-            }
-            stats.setSkillLevelFrom(stats.getSkillLevelFrom() - 1);
-        }
+    private TrainingResult calculateStatistics(Training training) {
+        TrainingStatistics stats =
+                statisticsService.getStatisticsForTraining(training.getId());
+        TrainingResult result = new TrainingResult();
+        result.setMinSkillFrom(stats.getMinSkillLevelFrom());
+        result.setMinSkillTo(stats.getMinSkillLevelTo());
+        result.setRunCount(stats.getRunCount());
+        result.setHitScore((int) ((stats.getHitCount() / (double) stats.getRunCount()) * 100));
+        result.setSkillScoreFrom((int) (stats.getAvgSkillLevelFrom() * 100) - 100);
+        result.setSkillScoreTo((int) (stats.getAvgSkillLevelTo() * 100) - 100);
+        return result;
     }
 
+    public Training save(Training training) {
+        return trainingRepository.save(training);
+    }
 }

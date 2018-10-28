@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {NotyService} from '../noty.service';
 import {Observable, Subject} from 'rxjs';
-import {Course} from './course';
-import {Chapter} from './chapter';
-import {Translation} from './translation';
-import {TranslationTag} from './translationtag';
+import {Course}from './model/course';
+import {Chapter}from './model/chapter';
+import {Translation}from './model/translation';
+import {TranslationTag}from './model/translationtag';
 import {catchError, finalize, tap} from 'rxjs/operators';
 
 @Injectable({
@@ -20,6 +20,9 @@ export class TranslationService {
 
   private loading = new Subject<Boolean>();
 
+  private courses = new Subject<Course[]>();
+  private tags = new Subject<TranslationTag[]>();
+
   httpOptions = {
     headers: new HttpHeaders({'Content-Type': 'application/json'})
   };
@@ -32,12 +35,17 @@ export class TranslationService {
     return this.loading.asObservable();
   }
 
-  listCourses():Observable<Course[]> {
-    return this.http.get<Course[]>(this.courseUrl+'/').pipe(
+  updateCourseList() {
+    this.http.get<Course[]>(this.courseUrl+'/').pipe(
       tap(() => this.loading.next(true)),
       catchError(this.notyService.handleError('Could not fetch Courses',[])),
       finalize(() => this.loading.next(false))
-    );
+    ).subscribe(cs => this.courses.next(cs));
+  }
+
+  getCourseSubscription():Observable<Course[]> {
+    // we propagate the result to all who listen in
+    return this.courses.asObservable();
   }
 
   addCourse(course:Course):Observable<Course> {
@@ -53,6 +61,12 @@ export class TranslationService {
     );
   }
 
+  deleteCourse(id:number):Observable<Course> {
+    return this.http.delete<Course>(this.courseUrl+'/'+id).pipe(
+      catchError(this.notyService.handleError('Could not delete Course'))
+    );
+  }
+
   getTranslation(id:number):Observable<Translation> {
     return this.http.get<Translation>(this.translationUrl+'/'+id).pipe(
       catchError(this.notyService.handleError('Could not find Translation'))
@@ -64,12 +78,6 @@ export class TranslationService {
       tap(() => this.loading.next(true)),
       catchError(this.notyService.handleError('Could not update Course')),
       finalize(() => this.loading.next(false))
-    );
-  }
-
-  deleteCourse(course:Course):Observable<Course> {
-    return this.http.delete<Course>(this.courseUrl+'/'+course.id).pipe(
-      catchError(this.notyService.handleError('Could not delete Course'))
     );
   }
 
@@ -93,8 +101,13 @@ export class TranslationService {
     );
   }
 
+  subscribeTranslationTags():Observable<TranslationTag[]> {
+    return this.tags.asObservable();
+  }
+
   listTranslationTags():Observable<TranslationTag[]> {
     return this.http.get<TranslationTag[]>(this.translationTagUrl+'/').pipe(
+      tap( t => this.tags.next(t)),
       catchError(this.notyService.handleError('Could not fetch Translationtags',[]))
     );
   }

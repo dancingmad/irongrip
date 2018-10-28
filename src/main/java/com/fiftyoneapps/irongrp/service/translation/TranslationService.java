@@ -1,7 +1,12 @@
 package com.fiftyoneapps.irongrp.service.translation;
 
+import com.fiftyoneapps.irongrp.service.exception.GeneralException;
 import com.fiftyoneapps.irongrp.service.exception.ResourceAlreadyExistingException;
+import com.fiftyoneapps.irongrp.service.exception.ResourceMissingException;
+import com.fiftyoneapps.irongrp.service.exception.UnauthorizedException;
+import com.fiftyoneapps.irongrp.service.training.ChapterStatisticsService;
 import com.fiftyoneapps.irongrp.service.translation.model.*;
+import com.fiftyoneapps.irongrp.service.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -23,8 +29,19 @@ public class TranslationService {
     @Autowired
     private TranslationTagRepository translationTagRepository;
 
-    public Optional<Course> getCourse(Long id) {
-        return courseRepository.findById(id);
+    @Autowired
+    private ChapterStatisticsService chapterStatisticsService;
+
+    public Optional<Course> getCourse(User user, Long id) {
+        Optional<Course> course = courseRepository.findById(id);
+        course.ifPresent(
+                c -> c.getChapters().forEach(chapter -> attachStatistics(user, chapter))
+        );
+        return course;
+    }
+
+    private void attachStatistics(User user, Chapter chapter) {
+        chapter.setChapterStatistics(chapterStatisticsService.getStatistics(user, chapter));
     }
 
     public Optional<Chapter> getChapter(Long id) {
@@ -44,7 +61,21 @@ public class TranslationService {
         if (translation.getId() != null) {
             throw new ResourceAlreadyExistingException("Adding Translation with id already existing");
         }
-        return translationRepository.save(translation);
+        translation.setEmptyTag(getEmptyTag());
+        return translationRepository.save(translation, 1);
+    }
+
+    public TranslationTag getEmptyTag() {
+        TranslationTag translationTag = translationTagRepository.getEmptyTag();
+        if (translationTag == null) {
+            translationTag = new TranslationTag();
+            translationTag.setName("EMPTY_TAG");
+            Translation dummyTranslation = new Translation();
+            dummyTranslation.setEmptyTag(translationTag);
+            translationRepository.save(dummyTranslation);
+            return dummyTranslation.getEmptyTag();
+        }
+        return translationTag;
     }
 
     public Translation updateTranslation(Translation translation) {
@@ -63,58 +94,71 @@ public class TranslationService {
         return translationTagRepository.findAllUsed();
     }
 
-    public List<Chapter> listChapters() {
-        List<Chapter> chapters = new ArrayList<>();
-        chapterRepository.findAll().forEach(chapters::add);
-        return chapters;
-    }
 
-    public void deleteTag(Long id) {
-        translationTagRepository.deleteById(id);
-    }
-
-    public void deleteTranslation(Long id) {
-        translationTagRepository.deleteById(id);
-    }
-
-
-
-    public void deleteCourse(Long id) {
+    public void deleteCourse(User user, Long id) {
         Course course = courseRepository.findById(id).get();
+        if (course.getCreatedBy() != user) {
+            throw new UnauthorizedException("Cannot delete course created by other user");
+        }
         course.getChapters().forEach(chapterRepository::delete);
         courseRepository.delete(course);
     }
 
 
-    public Course updateCourse(Course course) {
-        return courseRepository.save(
-                courseRepository
-                        .findById(course.getId())
-                        .get().merge(course));
+    public Course updateCourse(Course course, User user) {
+        Optional<Course> courseOptional = courseRepository
+                .findById(course.getId());
+        if (!courseOptional.isPresent()) {
+            throw new ResourceMissingException("Course is not available " + course.getId());
+        }
+        if (courseOptional.get().getCreatedBy() == null) {
+            courseOptional.get().setCreatedBy(user);
+        }
+        if (!courseOptional.get().getCreatedBy().equals(user)) {
+            throw new UnauthorizedException("User not allowed to change course");
+        }
+        return courseRepository.save(courseOptional.get().merge(course));
     }
 
-
-    public Chapter updateChapter(Chapter chapter) {
-        return chapterRepository.save(
-                chapterRepository.findById(chapter.getId())
-                        .get()
-                        .merge(chapter));
+    public Chapter updateChapter(Chapter chapter, User user) {
+        Optional<Chapter> optionalChapter = chapterRepository.findById(chapter.getId());
+        if (!optionalChapter.isPresent()) {
+            throw new GeneralException("Could not find chapter with id " + chapter.getId());
+        }
+        Chapter persistedChapter = optionalChapter.get();
+        if (persistedChapter.getCreatedBy() == null) {
+            persistedChapter.setCreatedBy(user);
+        }
+        if (!persistedChapter.getCreatedBy().equals(user)) {
+            throw new UnauthorizedException("Cannot update chapter of other user "
+                    + persistedChapter.getCreatedBy().getUsername());
+        }
+        chapter = chapterRepository.save(persistedChapter.merge(chapter), 1);
+        translationRepository.deleteUnusedTranslations(user.getId());
+        return chapter;
     }
 
-    public List<Course> listCourses() {
+    public List<Course> listCourses(User user) {
         List<Course> courses = new ArrayList<>();
         courseRepository.findAll().forEach(courses::add);
+        courses.forEach(c -> c.getChapters().parallelStream().forEach(
+                chapter -> attachStatistics(user, chapter)));
         return courses;
     }
 
-    public List<Translation> listTranslations() {
-        List<Translation> translations = new ArrayList<>();
-        translationRepository.findAll().forEach(translations::add);
-        return translations;
+    public List<Course> fetchCoursesForBackup(User user) {
+        List<Course> courses = courseRepository.findByUser(user.getId());
+        return courses.parallelStream().map(this::fetchCourse).collect(Collectors.toList());
     }
+
+    private Course fetchCourse(Course course) {
+        return courseRepository.findById(course.getId(), 4).orElse(null);
+    }
+
 
     public List<Translation> getTranslationsForTraining(Long configurationId) {
         return translationRepository.getTranslationsForTraining(configurationId);
     }
+
 
 }

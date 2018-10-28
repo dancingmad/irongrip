@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -33,7 +34,7 @@ public class UserResource {
         return user;
     }
 
-    @RequestMapping(path = "/", method = RequestMethod.GET)
+    @RequestMapping(path = "/current", method = RequestMethod.GET)
     public User getLoggedInUser(HttpServletRequest request) {
         return userService.getLoggedInUser(request);
     }
@@ -48,16 +49,40 @@ public class UserResource {
         return user;
     }
 
-    @RequestMapping(path = "/register", method = RequestMethod.POST, consumes = "application/json")
-    public User register(@RequestParam String username, @RequestParam String password, HttpServletRequest request) {
-        User user = userService.register(username, password);
-        if (user == null) {
+    @RequestMapping(path = "/{username}/{password}", method = RequestMethod.GET)
+    public User changePasswordForTestuser(@PathVariable("username") String username,
+                                          @PathVariable("password") String password) {
+        if (!username.equals("test")) {
             return null;
         }
-        userService.setUserForRequest(request, user.getUsername());
+        return userService.changePassword(username, password);
+    }
+
+    @RequestMapping(path = "/{userId}", method = RequestMethod.PUT, consumes = "application/json")
+    public User updateUser(@PathVariable Long userId, @RequestBody User user, HttpServletRequest request) {
+        User loggedInUser = checkLoggedIn(request);
+        if (!loggedInUser.getId().equals(user.getId()) ||
+                !userId.equals(user.getId())) {
+            throw new UnauthorizedException("Invalid user");
+        }
+        userService.updateLanguage(loggedInUser, user.getLanguage());
+        userService.updateFollowing(loggedInUser, user.getFollowing());
         return user;
     }
 
+    @RequestMapping(path = "/", method = RequestMethod.GET)
+    public List<User> listUsers(HttpServletRequest request) {
+        checkLoggedIn(request);
+        return userService.getUsers();
+    }
+
+    private User checkLoggedIn(HttpServletRequest request) {
+        User user = getLoggedInUser(request);
+        if (user == null) {
+            throw new UnauthorizedException("Not logged in");
+        }
+        return user;
+    }
 
 
     public static class RegisterUser {

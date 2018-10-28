@@ -2,6 +2,7 @@ package com.fiftyoneapps.irongrp.service.training.model;
 
 import com.fiftyoneapps.irongrp.service.translation.Language;
 import com.fiftyoneapps.irongrp.service.translation.model.Chapter;
+import com.fiftyoneapps.irongrp.service.translation.model.Course;
 import com.fiftyoneapps.irongrp.service.translation.model.TranslationTag;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
@@ -17,14 +18,14 @@ public class TrainingConfiguration {
     @GeneratedValue
     private Long id;
 
-    @Relationship(type = "refers")
+    @Relationship(type = "chapters")
     private List<Chapter> chapters;
 
     private TranslationDirection direction;
 
     private boolean hintEnabled;
 
-    @Relationship(type = "refers")
+    @Relationship(type = "tags")
     private List<TranslationTag> tags;
 
     private Language toLanguage;
@@ -32,12 +33,14 @@ public class TrainingConfiguration {
     private boolean iterationMode;
 
     // for iteration mode just iterate over the translations, not considering skill levels
-    private int limitIterations;
+    private int iterationsLimit;
 
     // for non-iteration mode both time and skill limit can be configured
-    private int limitSkillLevel;
+    private int skillLevelLimit;
     private boolean useOverallSkillLevel;
 
+    @Relationship(type = "course")
+    private Course course;
 
     public Long getId() {
         return id;
@@ -91,20 +94,20 @@ public class TrainingConfiguration {
         this.iterationMode = iterationMode;
     }
 
-    public int getLimitIterations() {
-        return limitIterations;
+    public int getIterationsLimit() {
+        return iterationsLimit;
     }
 
-    public void setLimitIterations(int limitIterations) {
-        this.limitIterations = limitIterations;
+    public void setIterationsLimit(int iterationsLimit) {
+        this.iterationsLimit = iterationsLimit;
     }
 
-    public int getLimitSkillLevel() {
-        return limitSkillLevel;
+    public int getSkillLevelLimit() {
+        return skillLevelLimit;
     }
 
-    public void setLimitSkillLevel(int limitSkillLevel) {
-        this.limitSkillLevel = limitSkillLevel;
+    public void setSkillLevelLimit(int skillLevelLimit) {
+        this.skillLevelLimit = skillLevelLimit;
     }
 
     public boolean isUseOverallSkillLevel() {
@@ -113,5 +116,13 @@ public class TrainingConfiguration {
 
     public void setUseOverallSkillLevel(boolean useOverallSkillLevel) {
         this.useOverallSkillLevel = useOverallSkillLevel;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

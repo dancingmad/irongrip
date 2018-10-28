@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
@@ -31,14 +32,33 @@ public class WebSecurityFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        LOGGER.info("Filter activated!");
-        if (servletRequest instanceof HttpServletRequest) {
-            HttpServletRequest request = (HttpServletRequest) servletRequest;
-            if (!request.getMethod().equalsIgnoreCase("get")) {
-                userService.getLoggedInUser(request);
-            }
-        }
+
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    private boolean doFilter(ServletRequest servletRequest, ServletResponse servletResponse) {
+        if (!(servletRequest instanceof HttpServletRequest)) {
+            return true;
+        }
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        if (request.getMethod().equalsIgnoreCase("get")) {
+            return true;
+        }
+        if (request.getServletPath().startsWith("/api/user")) {
+            return true;
+        }
+        if (!(servletResponse instanceof HttpServletResponse)) {
+            userService.getLoggedInUser(request);
+            return true;
+        }
+
+        try {
+            userService.getLoggedInUser(request);
+        } catch (RuntimeException re) {
+            LOGGER.info("Unauthorized access for " + request.getServletPath());
+            ((HttpServletResponse) servletResponse).setStatus(401);
+        }
+        return true;
     }
 
     @Override

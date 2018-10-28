@@ -48,6 +48,9 @@
         <div class="btn-group btn-group-lg">
           <a class="btn btn-lg btn-outline-info material-icons" routerLink="/translations">chevron_left</a>
           <button [disabled]="saving" class="btn btn-lg btn-outline-info" (click)="save()">Save</button>
+          <button [disabled]="saving" class="btn btn-lg btn-outline-info material-icons" (click)="delete()">
+            delete_forever
+          </button>
         </div>
       </div>
       <div class="col">

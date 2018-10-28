@@ -20,7 +20,7 @@ export class UserService {
   constructor(private http: HttpClient,
               private notyService: NotyService) {
     const url = `${this.userUrl}`;
-    this.http.get<User>(url).subscribe(
+    this.http.get<User>(url+'current').subscribe(
       user => {
         this.pendingUser.next(user);
       }
@@ -62,6 +62,17 @@ export class UserService {
         }
       }
     );
+  }
+
+  update(user:User) {
+    this.http.put<User>(this.userUrl+user.id,user).subscribe(
+      () => this.notyService.addSuccess('Updated user profile'),
+      error => this.notyService.addError('Could not update user profile')
+    );
+  }
+
+  list():Observable<User[]> {
+    return this.http.get<User[]>(this.userUrl);
   }
 
   logout() {

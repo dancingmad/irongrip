@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../services/user.service';
 import {User} from '../../../services/user';
-import {Translation} from '../../../services/translation/translation';
+import {Translation}from '../../../services/translation/model/translation';
 import {Observable} from 'rxjs';
 import {TranslationService} from '../../../services/translation/translation.service';
-import {Course} from '../../../services/translation/course';
-import {Chapter} from '../../../services/translation/chapter';
-import {TranslationTag}from '../../../services/translation/translationtag';
+import {Course}from '../../../services/translation/model/course';
+import {Chapter}from '../../../services/translation/model/chapter';
+import {TranslationTag}from '../../../services/translation/model/translationtag';
+import {ActivatedRoute}from "@angular/router";
+import {CoursePick}from "../../../services/translation/model/coursepick";
 
 @Component({
   selector: 'app-translations',
@@ -16,11 +18,8 @@ import {TranslationTag}from '../../../services/translation/translationtag';
 export class TranslationsComponent implements OnInit {
 
   user: User;
-  languages: string[];
-  selectedCourse: Course;
-  selectedChapter: Chapter;
-  selectedLanguage: string;
-  courses: Course[];
+  coursePick: CoursePick = new CoursePick();
+
 
   constructor(private userService: UserService,
               private translationService: TranslationService) { }
@@ -28,28 +27,20 @@ export class TranslationsComponent implements OnInit {
   ngOnInit() {
     this.userService.getLoggedInUser().subscribe(u => {
       this.user = u;
-      this.refreshCourses();
+      this.coursePick.selectedLanguage = this.user.language || 'ENGLISH';
     });
-    this.languages = this.translationService.listLanguages();
-  }
-
-
-  refreshCourses() {
-    this.translationService.listCourses().subscribe(
-      courses => this.courses = courses
-    );
   }
 
   add() {
     const t = new Translation();
     t.edit = true;
-    t.language = this.selectedCourse.language;
+    t.language = this.coursePick.selectedCourse.language;
     t.createdBy = this.user;
     t.translatesTo = [];
-    t.translatesTo.push({language:this.selectedLanguage, createdBy:this.user} as Translation);
+    t.translatesTo.push({language:this.coursePick.selectedLanguage, createdBy:this.user} as Translation);
     t.phrases = [];
     t.tags = [];
-    this.selectedChapter.translations.push(t);
+    this.coursePick.selectedChapter.translations.push(t);
   }
 
   save(translation:Translation) {
@@ -61,28 +52,11 @@ export class TranslationsComponent implements OnInit {
       this.translationService.addTranslation(translation).subscribe(
         t => {
           translation.id = t.id;
-          this.translationService.updateChapter(this.selectedChapter).subscribe();
+          this.translationService.updateChapter(this.coursePick.selectedChapter).subscribe(
+            () =>  translation.edit = false);
         }
       );
     }
-  }
-
-  changeCourse() {
-    if (this.selectedCourse.chapters.length > 0) {
-      this.selectedChapter = this.selectedCourse.chapters[0];
-      this.refreshChapter();
-    }
-  }
-
-  refreshChapter() {
-    this.translationService.getChapter(this.selectedChapter.id).subscribe(
-      (chapter) => {
-         // replace with refreshed chapter
-         const idx = this.selectedCourse.chapters.findIndex((c) => c === this.selectedChapter);
-         this.selectedCourse.chapters[idx]=chapter;
-         this.selectedChapter = chapter;
-      }
-    );
   }
 
   finishedEdit(save: boolean, translation:Translation) {
@@ -93,8 +67,8 @@ export class TranslationsComponent implements OnInit {
         // do revert the values to old one
         this.translationService.getTranslation(translation.id).subscribe(
           (oldTranslation) => {
-            const idxTranslation = this.selectedChapter.translations.findIndex((t) => t === translation);
-            this.selectedChapter.translations[idxTranslation] = oldTranslation;
+            const idxTranslation = this.coursePick.selectedChapter.translations.findIndex((t) => t === translation);
+            this.coursePick.selectedChapter.translations[idxTranslation] = oldTranslation;
           });
       } else {
         this.removeTranslation(translation);
@@ -103,9 +77,9 @@ export class TranslationsComponent implements OnInit {
   }
 
   removeTranslation(translation:Translation) {
-    const idx = this.selectedChapter.translations.findIndex((t) => t === translation);
-    this.selectedChapter.translations.splice(idx,1);
-    this.translationService.updateChapter(this.selectedChapter).subscribe();
+    const idx = this.coursePick.selectedChapter.translations.findIndex((t) => t === translation);
+    this.coursePick.selectedChapter.translations.splice(idx,1);
+    this.translationService.updateChapter(this.coursePick.selectedChapter).subscribe();
   }
 
 

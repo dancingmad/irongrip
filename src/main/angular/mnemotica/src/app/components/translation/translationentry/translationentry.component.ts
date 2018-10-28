@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Translation} from '../../../services/translation/translation';
+import {Translation}from '../../../services/translation/model/translation';
 import {TranslationService} from '../../../services/translation/translation.service';
-import {TranslationTag}from '../../../services/translation/translationtag';
+import {TranslationTag}from '../../../services/translation/model/translationtag';
 import {UserService}from '../../../services/user.service';
 import {User}from '../../../services/user';
 import {Observable, of, timer} from 'rxjs';

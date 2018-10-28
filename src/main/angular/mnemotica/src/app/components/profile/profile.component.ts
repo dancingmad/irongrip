@@ -11,20 +11,20 @@ import {TranslateService} from '@ngx-translate/core';
 export class ProfileComponent implements OnInit {
 
   user: User;
-  language = 'en';
+  languages: string[];
 
   constructor(private userService:UserService,
-              private translate:TranslateService) {
+              private translationService:TranslateService) {
   }
 
   ngOnInit() {
-    this.userService.getLoggedInUser().subscribe(u => {
-      this.user = u;
-    });
+    this.userService.getLoggedInUser().subscribe(u => this.user = u);
+    this.languages = ['ENGLISH','GERMAN'];
   }
 
   onChangeLanguage() {
-    this.translate.use(this.language);
+    this.translationService.use(this.user.language);
+    this.userService.update(this.user);
   }
 
 }

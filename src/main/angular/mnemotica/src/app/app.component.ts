@@ -14,16 +14,18 @@ export class AppComponent {
   user: User;
 
   constructor(private userService: UserService,
-              translate: TranslateService,
+              private translate: TranslateService,
               private route: ActivatedRoute,
               private location: Location) {
     this.fetchUser();
-    translate.setDefaultLang('en');
-    translate.use('en');
+    translate.setDefaultLang('ENGLISH');
   }
 
   fetchUser() {
-    this.userService.getLoggedInUser().subscribe(user => this.user = user);
+    this.userService.getLoggedInUser().subscribe(user => {
+      this.user = user;
+      this.translate.use(user.language || 'ENGLISH');
+    });
   }
 
   logout() {
