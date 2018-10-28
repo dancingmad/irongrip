@@ -76,6 +76,7 @@ public class TranslationStatisticsService {
         List<TranslationStatistics> remainingStatistics = new ArrayList<>(translationStatistics);
         int currentCount = maxCount;
         while (prioritizedStatistics.size() < limit) {
+            LOGGER.info("Adding {} with skill level {}", currentCount, (minLimit + (maxCount - currentCount)));
             prioritizedStatistics.addAll(
                     fetchAndRemoveNext(
                             minLimit + (maxCount - currentCount),
@@ -88,7 +89,7 @@ public class TranslationStatisticsService {
             }
         }
 
-        return randomizeResult(prioritizedStatistics, limit);
+        return randomizeResult(prioritizedStatistics.subList(0, limit), limit);
     }
 
     private List<TranslationStatistics> fetchAndRemoveNext(int skillLevel,
@@ -102,6 +103,7 @@ public class TranslationStatisticsService {
                         .collect(Collectors.toList());
 
         statisticsList.removeAll(fetched);
+        LOGGER.info("Effective added count " + fetched.size());
         return fetched;
     }
 

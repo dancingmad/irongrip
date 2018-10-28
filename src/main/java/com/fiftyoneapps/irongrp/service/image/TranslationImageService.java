@@ -1,6 +1,5 @@
 package com.fiftyoneapps.irongrp.service.image;
 
-import com.fiftyoneapps.irongrp.service.exception.GeneralException;
 import com.fiftyoneapps.irongrp.service.translation.model.Translation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -36,13 +34,7 @@ public class TranslationImageService {
     }
 
     private void addResource(Resource resource) {
-        String fileName;
-        try {
-            File file = resource.getFile();
-            fileName = file.getName();
-        } catch (IOException ioe) {
-            throw new GeneralException("Could not access file", ioe);
-        }
+        String fileName = resource.getFilename();
 
         Matcher matcher = pattern.matcher(fileName);
         while (matcher.find()) {
