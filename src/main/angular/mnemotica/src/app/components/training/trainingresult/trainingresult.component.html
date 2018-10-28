@@ -1,0 +1,38 @@
+<div class="row mt-2">
+  <div class="col-6" [ngClass]="result.hitScoreClass">
+    <progressbar [value]="result.hitScore"
+                 [type]="result.hitScoreClass"
+                 [animate]="true">{{result.hitScore}}% Hit
+    </progressbar>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-6">
+    <progressbar *ngIf="direction =='FROM' || direction == 'BOTH'"
+                 [max]="400"
+                 [value]="result.skillScoreFrom"
+                 [animate]="true">
+      {{result.skillScoreFrom}} Skill
+    </progressbar>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-6">
+    <progressbar *ngIf="direction =='TO' || direction == 'BOTH'"
+                 [max]="400"
+                 [value]="result.skillScoreTo"
+                 [animate]="true">{{result.skillScoreTo}} Skill
+    </progressbar>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-2">Words</div>
+  <div class="col-2">
+    {{result.runCount}}
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col">
+    <button class="btn btn-outline-dark material-icons" routerLink="/home">chevron_left</button>
+  </div>
+</div>

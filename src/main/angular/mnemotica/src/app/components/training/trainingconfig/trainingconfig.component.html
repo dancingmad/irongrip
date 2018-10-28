@@ -1,0 +1,100 @@
+<div class="row">
+  <div class="col-2">{{'translations.course' | translate}}</div>
+  <div class="col-lg-5 col-10">
+    <div class="input-group">
+      <select class="form-control" [(ngModel)]="selectedCourse">
+        <option *ngFor="let course of courses" [ngValue]="course">
+          {{course.name}} ({{'language.'+course.language | translate}})
+        </option>
+      </select>
+    </div>
+  </div>
+</div>
+<div class="row mt-1" *ngIf="selectedCourse">
+  <div class="col-2">
+    Chapters
+  </div>
+  <div class="col">
+    <button class="btn btn-outline-dark"
+            *ngFor="let chapter of selectedCourse.chapters"
+            (click)="chapter.toggle = !chapter.toggle"
+            [ngClass]="{'active':chapter.toggle}">
+      {{chapter.name}}
+      <app-star-icon [chapter]="chapter" [direction]="selectedDirection"></app-star-icon>
+    </button>
+  </div>
+</div>
+
+<div class="row mt-1" *ngIf="selectedCourse">
+  <div class="col-2">
+    Tags
+  </div>
+  <div class="col">
+    <div class="btn-group" role="group">
+      <button class="btn btn-outline-dark"
+              *ngFor="let tag of tags"
+              (click)="tag.toggle = !tag.toggle"
+              [ngClass]="{'active':tag.toggle}">
+        {{tag.name}}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-1" *ngIf="selectedCourse">
+  <div class="col-2">
+    Direction
+  </div>
+  <div class="col">
+    <div class="btn-group" role="group">
+      <button class="btn btn-outline-dark material-icons"
+              *ngFor="let direction of directionOptions"
+              (click)="selectedDirection = direction"
+              [ngClass]="{'active':selectedDirection == direction}">
+        {{getDirectionImage(direction)}}
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-2" *ngIf="selectedCourse">
+  <div class="col-2">
+    Limit
+  </div>
+  <div class="col">
+    <div class="row">
+      <div class="col">
+        <div class="btn-group" role="group">
+          <button class="btn btn-outline-dark"
+                  [ngClass]="{'active':!iterationMode}"
+                  (click)="iterationMode = false">
+            SkillLevel
+          </button>
+          <button class="btn btn-outline-dark"
+                  [ngClass]="{'active':iterationMode}"
+                  (click)="iterationMode = true">
+            Iteration
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-1">
+      <div class="col">
+        <div class="btn-group" role="group">
+          <button class="btn btn-outline-dark"
+                  *ngFor="let limit of limitOptions"
+                  (click)="selectedLimit = limit"
+                  [ngClass]="{'active':selectedLimit == limit}">
+            {{limit}}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-3" *ngIf="selectedCourse">
+  <div class="col offset-2">
+    <button class="btn btn-outline-dark" (click)="startTraining()" [disabled]="loading">Start Training...</button>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<form name="guessingForm" (keyup.enter)="checkGuess()">
+  <div *ngIf="trainingFinish">
+    <app-trainingresult [startResult]="training.result"
+                        [finishResult]="trainingFinish.result"
+                        [direction]="training.configuration.direction"></app-trainingresult>
+  </div>
+  <div class="row" *ngIf="currentStatistics">
+    <div class="col">
+      <div class="row question">
+        <div class="col" *ngIf="isCurrentDirectionTo">
+          <div class="row">
+            <div *ngIf="currentStatistics.translation.iconUrl" class="col-2"><img
+              [src]="currentStatistics.translation.iconUrl"></div>
+            <div class="col" [ngClass]="fontClass">{{currentStatistics.translation.translation}}</div>
+            <div class="col text-right" *ngIf="currentStatistics.showHint">{{currentStatistics.translation.hint}}</div>
+            <div class="col text-right" *ngIf="!currentStatistics.showHint">
+              <button class="btn btn-outline-dark " (click)="currentStatistics.showHint = true">show hint</button>
+            </div>
+          </div>
+          <div class="row" *ngIf="!guessInput">
+            <div class="col">
+              <span>{{lockedGuess}} => </span>
+              <span>{{currentStatistics.translation.translatesTo[0].translation}}</span>
+              <span *ngIf="isGuessCorrect"> (Success) </span>
+              <span *ngIf="!isGuessCorrect"> (Failed) </span>
+            </div>
+          </div>
+        </div>
+        <div class="col" *ngIf="!isCurrentDirectionTo">
+          <div class="row">
+            <div class="col">{{currentStatistics.translation.translatesTo[0].translation}}</div>
+          </div>
+          <div class="row" *ngIf="!guessInput">
+            <div class="col">{{lockedGuess}} =></div>
+            <div class="col">{{currentStatistics.translation.translation}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <input *ngIf="guessInput" name="guess" type="text" class="form-control form-control-sm answer"
+                 [(ngModel)]="guess">
+        </div>
+      </div>
+      <div class="row mt-2">
+        <div class="col">
+          <button *ngIf="guessInput" class="material-icons btn btn-outline-dark answer" (click)="checkGuess()">input
+          </button>
+          <div class="btn-group" *ngIf="!guessInput">
+            <button class="material-icons btn btn-outline-dark answer-ok" (click)="addRun(true)" [disabled]="loading">
+              check
+            </button>
+            <button class="material-icons btn btn-outline-dark answer-nok" (click)="addRun(false)" [disabled]="loading">
+              cancel
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</form>
