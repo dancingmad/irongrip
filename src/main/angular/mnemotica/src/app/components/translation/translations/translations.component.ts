@@ -2,13 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../services/user.service';
 import {User} from '../../../services/user';
 import {Translation}from '../../../services/translation/model/translation';
-import {Observable} from 'rxjs';
 import {TranslationService} from '../../../services/translation/translation.service';
-import {Course}from '../../../services/translation/model/course';
-import {Chapter}from '../../../services/translation/model/chapter';
-import {TranslationTag}from '../../../services/translation/model/translationtag';
-import {ActivatedRoute}from "@angular/router";
-import {CoursePick}from "../../../services/translation/model/coursepick";
+import {CoursePick}from '../../../services/translation/model/coursepick';
 
 @Component({
   selector: 'app-translations',

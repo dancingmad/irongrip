@@ -2,7 +2,6 @@ import{Component, Input, OnChanges, OnInit}from '@angular/core';
 import {AggregatedTrainingResult}from './aggregatedTrainingResult';
 import {of}from 'rxjs';
 import {delay}from 'rxjs/operators';
-import {InputExclusionDescriptor}from 'tslint/lib/rules/completed-docs/exclusionDescriptors';
 import {TrainingResult}from '../../../services/training/model/trainingresult';
 import {animate, state, style, transition, trigger}from '@angular/animations';
 

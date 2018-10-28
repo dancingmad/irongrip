@@ -4,7 +4,6 @@ import {Component, Input, OnInit}from '@angular/core';
 import {Course}from '../../../services/translation/model/course';
 import {UserService}from '../../../services/user.service';
 import {TranslationService}from '../../../services/translation/translation.service';
-import {Chapter}from '../../../services/translation/model/chapter';
 
 @Component({
   selector: 'app-coursepicker',
@@ -35,7 +34,13 @@ export class CoursepickerComponent implements OnInit {
 
   subscribeCourseUpdates() {
     this.translationService.getCourseSubscription().subscribe(
-      courses => this.courses = courses
+      courses => {
+        this.courses = courses;
+        if (!this.coursePick.selectedCourse) {
+          this.coursePick.selectedCourse = this.courses[0];
+          this.changeCourse();
+        }
+      }
     );
   }
 

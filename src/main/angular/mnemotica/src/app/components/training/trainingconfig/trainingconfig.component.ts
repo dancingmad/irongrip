@@ -3,13 +3,12 @@ import {UserService}from '../../../services/user.service';
 import {TranslationService}from '../../../services/translation/translation.service';
 import {User}from '../../../services/user';
 import {Course}from '../../../services/translation/model/course';
-import {Chapter}from '../../../services/translation/model/chapter';
 import {TranslationTag}from '../../../services/translation/model/translationtag';
 import {TrainingService}from '../../../services/training/training.service';
 import {TrainingConfiguration}from '../../../services/training/model/trainingconfiguration';
 
 import {Location} from '@angular/common';
-import {ActivatedRoute, Router}from '@angular/router';
+import {Router}from '@angular/router';
 
 @Component({
   selector: 'app-trainingconfig',

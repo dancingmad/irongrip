@@ -1,4 +1,4 @@
-import{Component, ElementRef, OnInit, ViewChild}from '@angular/core';
+import{Component, OnInit}from '@angular/core';
 import {UserService}from '../../../services/user.service';
 import {ActivatedRoute}from '@angular/router';
 import {TrainingService}from '../../../services/training/training.service';
@@ -6,10 +6,6 @@ import {Training} from '../../../services/training/model/training';
 import {TranslationStatistics}from '../../../services/training/model/translationstatistics';
 import {TranslationStatisticsService} from '../../../services/training/translationstatistics.service';
 import {TranslationRun}from '../../../services/training/model/translationrun';
-import {AggregatedTrainingResult} from '../trainingresult/aggregatedTrainingResult';
-import {merge, Observable, of, pipe}from 'rxjs';
-import {delay, mapTo}from 'rxjs/operators';
-import {animate, state, style, transition, trigger}from '@angular/animations';
 
 @Component({
   selector: 'app-training',

@@ -5,7 +5,6 @@ import {Course}from '../../../services/translation/model/course';
 import {TranslationService} from '../../../services/translation/translation.service';
 import {Chapter}from '../../../services/translation/model/chapter';
 import {NotyService} from '../../../services/noty.service';
-import {switchMap}from 'rxjs/operators';
 
 @Component({
   selector: 'app-course',

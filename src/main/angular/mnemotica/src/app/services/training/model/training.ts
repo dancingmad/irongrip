@@ -1,6 +1,6 @@
-import{User}from"../../user";
-import {TrainingConfiguration}from "./trainingconfiguration";
-import {Translation}from "../../translation/model/translation";
+import{User}from'../../user';
+import {TrainingConfiguration}from './trainingconfiguration';
+import {Translation}from '../../translation/model/translation';
 import {TrainingResult}from './trainingresult';
 
 export class Training {

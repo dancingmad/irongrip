@@ -1,4 +1,4 @@
 exportclassChapterStatistics {
   chapterScoreTo:number;
-chapterScoreFrom: number;
+chapterScoreFrom:number;
 }

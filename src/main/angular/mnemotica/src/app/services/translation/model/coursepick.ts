@@ -1,5 +1,5 @@
-import{Course}from"./course";
-import {Chapter} from "./chapter";
+import{Course}from'./course';
+import {Chapter} from './chapter';
 
 export class CoursePick {
 selectedCourse: Course;
