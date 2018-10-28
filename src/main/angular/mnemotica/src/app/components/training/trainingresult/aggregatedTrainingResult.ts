@@ -1,4 +1,4 @@
-exportclassAggregatedTrainingResult {
+export class AggregatedTrainingResult {
   hitScore:number;
 hitScoreClass: string;
 skillScoreFrom: number;

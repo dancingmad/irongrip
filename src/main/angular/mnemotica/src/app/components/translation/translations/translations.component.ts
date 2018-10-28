@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {UserService} from '../../../services/user.service';
 import {User} from '../../../services/user';
-import {Translation}from '../../../services/translation/model/translation';
+import {Translation} from '../../../services/translation/model/translation';
 import {TranslationService} from '../../../services/translation/translation.service';
-import {CoursePick}from '../../../services/translation/model/coursepick';
+import {CoursePick} from '../../../services/translation/model/coursepick';
 
 @Component({
   selector: 'app-translations',

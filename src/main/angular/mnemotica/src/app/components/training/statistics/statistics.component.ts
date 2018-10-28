@@ -1,8 +1,8 @@
-import{Component, OnInit}from '@angular/core';
-import {TranslationStatistics}from '../../../services/training/model/translationstatistics';
+import {Component, OnInit} from '@angular/core';
+import {TranslationStatistics} from '../../../services/training/model/translationstatistics';
 import {TranslationStatisticsService} from '../../../services/training/translationstatistics.service';
-import {User}from '../../../services/user';
-import {UserService}from '../../../services/user.service';
+import {User} from '../../../services/user';
+import {UserService} from '../../../services/user.service';
 
 
 @Component({

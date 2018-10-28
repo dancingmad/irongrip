@@ -1,11 +1,11 @@
-import{Injectable}from'@angular/core';
-import {Observable, Subject}from 'rxjs';
-import {HttpClient}from '@angular/common/http';
-import {NotyService}from '../noty.service';
-import {Training}from './model/training';
-import {catchError, finalize, tap}from 'rxjs/operators';
-import {TranslationRun}from './model/translationrun';
-import {TranslationStatistics}from './model/translationstatistics';
+import {Injectable} from '@angular/core';
+import {Observable, Subject} from 'rxjs';
+import {HttpClient} from '@angular/common/http';
+import {NotyService} from '../noty.service';
+import {Training} from './model/training';
+import {catchError, finalize, tap} from 'rxjs/operators';
+import {TranslationRun} from './model/translationrun';
+import {TranslationStatistics} from './model/translationstatistics';
 
 
 @Injectable({

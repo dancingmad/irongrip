@@ -1,9 +1,9 @@
-import{User}from'../../../services/user';
-import {CoursePick}from '../../../services/translation/model/coursepick';
-import {Component, Input, OnInit}from '@angular/core';
-import {Course}from '../../../services/translation/model/course';
-import {UserService}from '../../../services/user.service';
-import {TranslationService}from '../../../services/translation/translation.service';
+import {User} from '../../../services/user';
+import {CoursePick} from '../../../services/translation/model/coursepick';
+import {Component, Input, OnInit} from '@angular/core';
+import {Course} from '../../../services/translation/model/course';
+import {UserService} from '../../../services/user.service';
+import {TranslationService} from '../../../services/translation/translation.service';
 
 @Component({
   selector: 'app-coursepicker',

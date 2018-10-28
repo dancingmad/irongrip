@@ -1,10 +1,10 @@
-import{Injectable}from'@angular/core';
-import {HttpClient}from '@angular/common/http';
-import {NotyService}from '../noty.service';
-import {Observable, Subject}from 'rxjs';
-import {catchError, finalize, tap}from 'rxjs/operators';
-import {TrainingConfiguration}from './model/trainingconfiguration';
-import {Training}from './model/training';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {NotyService} from '../noty.service';
+import {Observable, Subject} from 'rxjs';
+import {catchError, finalize, tap} from 'rxjs/operators';
+import {TrainingConfiguration} from './model/trainingconfiguration';
+import {Training} from './model/training';
 
 @Injectable({
   providedIn: 'root'

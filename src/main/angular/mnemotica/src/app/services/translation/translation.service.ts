@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {NotyService} from '../noty.service';
 import {Observable, Subject} from 'rxjs';
-import {Course}from './model/course';
-import {Chapter}from './model/chapter';
-import {Translation}from './model/translation';
-import {TranslationTag}from './model/translationtag';
+import {Course} from './model/course';
+import {Chapter} from './model/chapter';
+import {Translation} from './model/translation';
+import {TranslationTag} from './model/translationtag';
 import {catchError, finalize, tap} from 'rxjs/operators';
 
 @Injectable({

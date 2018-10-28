@@ -1,11 +1,11 @@
-import{Component, OnInit}from '@angular/core';
-import {UserService}from '../../../services/user.service';
-import {ActivatedRoute}from '@angular/router';
-import {TrainingService}from '../../../services/training/training.service';
+import {Component, OnInit} from '@angular/core';
+import {UserService} from '../../../services/user.service';
+import {ActivatedRoute} from '@angular/router';
+import {TrainingService} from '../../../services/training/training.service';
 import {Training} from '../../../services/training/model/training';
-import {TranslationStatistics}from '../../../services/training/model/translationstatistics';
+import {TranslationStatistics} from '../../../services/training/model/translationstatistics';
 import {TranslationStatisticsService} from '../../../services/training/translationstatistics.service';
-import {TranslationRun}from '../../../services/training/model/translationrun';
+import {TranslationRun} from '../../../services/training/model/translationrun';
 
 @Component({
   selector: 'app-training',

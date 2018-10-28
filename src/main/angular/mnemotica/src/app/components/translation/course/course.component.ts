@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, ParamMap}from '@angular/router';
+import {ActivatedRoute, ParamMap} from '@angular/router';
 import {Location} from '@angular/common';
-import {Course}from '../../../services/translation/model/course';
+import {Course} from '../../../services/translation/model/course';
 import {TranslationService} from '../../../services/translation/translation.service';
-import {Chapter}from '../../../services/translation/model/chapter';
+import {Chapter} from '../../../services/translation/model/chapter';
 import {NotyService} from '../../../services/noty.service';
 
 @Component({
