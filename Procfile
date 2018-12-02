@@ -1,1 +1,0 @@
-web: java -Dserver.port=$PORT $JAVA_OPTS -jar target/irongrp-0.0.1-SNAPSHOT.jar --spring.data.neo4j.password=$GRAPHENEDB_BOLT_PASSWORD --spring.data.neo4j.username=$GRAPHENEDB_BOLT_USER --spring.data.neo4j.uri=$GRAPHENEDB_BOLT_URL
