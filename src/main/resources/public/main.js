@@ -926,7 +926,12 @@ var TrainingconfigComponent = /** @class */ (function () {
         var _this = this;
         this.userService.getLoggedInUser().subscribe(function (u) {
             _this.user = u;
-            _this.translationService.getCourseSubscription().subscribe(function (c) { return _this.courses = c; });
+            _this.translationService.getCourseSubscription().subscribe(function (c) {
+                _this.courses = c;
+                if (!_this.selectedCourse && _this.courses && _this.courses.length > 0) {
+                    _this.selectedCourse = _this.courses[0];
+                }
+            });
             _this.translationService.subscribeTranslationTags().subscribe(function (t) { return _this.tags = t; });
             _this.translationService.updateCourseList();
             _this.translationService.listTranslationTags().subscribe();

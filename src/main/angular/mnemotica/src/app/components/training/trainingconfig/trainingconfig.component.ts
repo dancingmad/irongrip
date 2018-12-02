@@ -39,7 +39,12 @@ export class TrainingconfigComponent implements OnInit {
       u => {
         this.user = u;
         this.translationService.getCourseSubscription().subscribe(
-          c => this.courses = c
+          c => {
+            this.courses = c;
+            if (!this.selectedCourse && this.courses && this.courses.length > 0) {
+              this.selectedCourse = this.courses[0];
+            }
+          }
         );
         this.translationService.subscribeTranslationTags().subscribe(
           t => this.tags = t
