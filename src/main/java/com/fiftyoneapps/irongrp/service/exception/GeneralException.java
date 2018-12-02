@@ -6,4 +6,8 @@ public class GeneralException extends RuntimeException {
         super(errorMessage);
     }
 
+    public GeneralException(String errorMessage, Throwable t) {
+        super(errorMessage, t);
+    }
+
 }

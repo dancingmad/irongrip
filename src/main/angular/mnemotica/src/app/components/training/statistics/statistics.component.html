@@ -1,0 +1,11 @@
+<div class="row" *ngIf="statisticsList && statisticsList.length == 0">
+  No statistics recorded yet
+</div>
+<div class="row" *ngFor="let stat of statisticsList">
+  <div class="col-5">
+    {{stat.translation.translation}}
+  </div>
+  <div class="col">
+    {{stat.skillLevelFrom}}/{{stat.skillLevelTo}}
+  </div>
+</div>

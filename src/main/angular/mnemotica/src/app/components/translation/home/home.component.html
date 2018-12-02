@@ -1,0 +1,56 @@
+<div class="row">
+  <div class="col">
+    <button class="btn btn-outline-dark" routerLink="/config">New Training...</button>
+  </div>
+</div>
+<div class="row mt-1">
+  <div class="col">
+    <table class="table">
+      <thead class="thead-light">
+      <tr>
+        <th>When?</th>
+        <th>What?</th>
+        <th>Chapters</th>
+        <th>Tags</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody class="table-hover">
+      <tr *ngFor="let training of trainings">
+        <td>{{training.startedAt | date:'EEEE, MMMM d'}}</td>
+        <td>Training for {{'language.'+training.configuration.course.language | translate}}</td>
+        <td>
+          <button class="tag" *ngFor="let chapter of training.configuration.chapters">
+            {{chapter.name}}
+          </button>
+        </td>
+        <td>
+          <button class="tag" *ngFor="let tag of training.configuration.tags">
+            {{getTagName(tag)}}
+          </button>
+        </td>
+        <td>
+          <div class="btn-group">
+            <button class="btn btn-outline-dark material-icons"
+                    [routerLink]="'/training/'+training.id"
+                    *ngIf="!training.endedAt">play_circle_outline
+            </button>
+            <button class="btn btn-outline-dark material-icons"
+                    [routerLink]="'/training/'+training.id"
+                    *ngIf="training.endedAt">{{getStatImage(training)}}
+            </button>
+            <button class="btn btn-outline-dark material-icons"
+                    (click)="closeTraining(training)"
+                    *ngIf="!training.endedAt">stop
+            </button>
+            <button class="btn btn-outline-dark material-icons"
+                    (click)="replayTraining(training)"
+                    *ngIf="training.endedAt">replay
+            </button>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

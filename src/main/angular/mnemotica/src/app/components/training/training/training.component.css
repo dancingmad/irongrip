@@ -1,0 +1,34 @@
+.question {
+  font-size: xx-large;
+}
+
+.answer {
+  font-size: xx-large;
+  line-height: 2;
+  width:100%;
+}
+
+button.answer-ok {
+  font-size: xx-large;
+  line-height: 2;
+  width:50%;
+}
+
+button.answer-nok {
+  font-size: xx-large;
+  line-height: 2;
+  width:50%;
+}
+
+.hint {
+  font-size: x-large;
+  color: gray;
+}
+
+.font-big {
+  font-size: 48pt;
+}
+
+.font-normal {
+  font-size: 32pt;
+}

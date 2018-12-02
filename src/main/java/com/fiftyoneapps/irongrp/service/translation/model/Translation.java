@@ -1,16 +1,15 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fiftyoneapps.irongrp.service.translation.Language;
 import com.fiftyoneapps.irongrp.service.user.model.User;
-import org.neo4j.ogm.annotation.GeneratedValue;
-import org.neo4j.ogm.annotation.Id;
-import org.neo4j.ogm.annotation.NodeEntity;
-import org.neo4j.ogm.annotation.Relationship;
+import org.neo4j.ogm.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @NodeEntity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Translation {
 
     @Id
@@ -21,30 +20,36 @@ public class Translation {
 
     private Language language;
 
-    @Relationship(type = "translates")
+    @Relationship(type = "translatesTo")
     private List<Translation> translatesTo;
 
     private String hint;
 
-    private String unicodeHint;
-
-    @Relationship(type = "usedIn")
+    @Relationship(type = "phrases")
     private List<Translation> phrases;
 
-    @Relationship(type = "tag")
+    @Relationship(type = "tags")
     private List<TranslationTag> tags;
 
-    @Relationship(type = "created_by")
+    @Relationship(type = "createdBy")
     private User createdBy;
+
+    @Relationship(type = "emptyTag")
+    private TranslationTag emptyTag;
+
+    @Transient
+    private String iconUrl;
+
+    public Translation() {
+        this.phrases = new ArrayList<>();
+        this.tags = new ArrayList<>();
+    }
 
     public Long getId() {
         return id;
     }
 
     public List<TranslationTag> getTags() {
-        if (tags == null) {
-            tags = new ArrayList<>();
-        }
         return tags;
     }
 
@@ -68,10 +73,19 @@ public class Translation {
         this.language = language;
     }
 
+    public String getIconUrl() {
+        return iconUrl;
+    }
+
+    public void setIconUrl(String iconUrl) {
+        this.iconUrl = iconUrl;
+    }
+
     public List<Translation> getTranslatesTo() {
         if (translatesTo == null) {
             translatesTo = new ArrayList<>();
         }
+
         return translatesTo;
     }
 
@@ -87,18 +101,7 @@ public class Translation {
         this.hint = hint;
     }
 
-    public String getUnicodeHint() {
-        return unicodeHint;
-    }
-
-    public void setUnicodeHint(String unicodeHint) {
-        this.unicodeHint = unicodeHint;
-    }
-
     public List<Translation> getPhrases() {
-        if (phrases == null) {
-            phrases = new ArrayList<>();
-        }
         return phrases;
     }
 
@@ -112,5 +115,22 @@ public class Translation {
 
     public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
+    }
+
+    public TranslationTag getEmptyTag() {
+        return emptyTag;
+    }
+
+    public void setEmptyTag(TranslationTag emptyTag) {
+        this.emptyTag = emptyTag;
+    }
+
+    public Translation merge(Translation translation) {
+        this.setTags(translation.getTags());
+        this.setPhrases(translation.getPhrases());
+        this.setTranslation(translation.getTranslation());
+        this.setHint(translation.getHint());
+        this.setTranslatesTo(translation.getTranslatesTo());
+        return this;
     }
 }

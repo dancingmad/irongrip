@@ -1,5 +1,7 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fiftyoneapps.irongrp.service.translation.Language;
 import com.fiftyoneapps.irongrp.service.user.model.User;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NodeEntity
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Course {
 
     @Id
@@ -18,14 +21,13 @@ public class Course {
 
     private String name;
 
-    @Relationship(type = "previous")
-    private Course previousCourse;
+    private Language language;
 
-    @Relationship(type = "next")
-    private Course nextCourse;
-
-    @Relationship(type = "contains")
+    @Relationship(type = "chapters")
     private List<Chapter> chapters;
+
+    @Relationship(type = "createdBy")
+    private User createdBy;
 
     public List<Chapter> getChapters() {
         if (chapters == null) {
@@ -36,6 +38,14 @@ public class Course {
 
     public void setChapters(List<Chapter> chapters) {
         this.chapters = chapters;
+    }
+
+    public Language getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(Language language) {
+        this.language = language;
     }
 
     public Long getId() {
@@ -50,19 +60,18 @@ public class Course {
         this.name = name;
     }
 
-    public Course getPreviousCourse() {
-        return previousCourse;
+    public User getCreatedBy() {
+        return createdBy;
     }
 
-    public void setPreviousCourse(Course previousCourse) {
-        this.previousCourse = previousCourse;
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
-    public Course getNextCourse() {
-        return nextCourse;
-    }
-
-    public void setNextCourse(Course nextCourse) {
-        this.nextCourse = nextCourse;
+    public Course merge(Course course) {
+        this.chapters = course.chapters;
+        this.language = course.language;
+        this.name = course.name;
+        return this;
     }
 }

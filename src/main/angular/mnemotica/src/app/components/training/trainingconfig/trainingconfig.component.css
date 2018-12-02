@@ -1,0 +1,30 @@
+.chapter {
+  margin-right:5px;
+  padding: 2px;
+  color: white;
+  border-radius: 5px;
+  font-size:0.7em;
+  min-width: 100px;
+}
+
+.chapter.on {
+  background-color: #98ff98;
+  border: 1px solid #98ff98;
+  color: black;
+}
+
+.chapter.on:hover {
+  background-color: #ff99ba;
+  border: 1px solid #ff99ba;
+}
+
+.chapter.off {
+  background-color: #ff99ba;
+  border: 1px solid #ff99ba;
+}
+
+.chapter.off:hover {
+  background-color: #98ff98;
+  border: 1px solid #98ff98;
+  color: black;
+}

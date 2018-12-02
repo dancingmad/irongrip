@@ -1,0 +1,26 @@
+<app-coursepicker [coursePick]="coursePick"></app-coursepicker>
+<div class="row mt-2" *ngIf="coursePick.selectedChapter && coursePick.selectedLanguage">
+  <div class="col"><button (click)="add()">Add</button></div>
+</div>
+<div class="row mt-2" *ngIf="coursePick.selectedChapter && coursePick.selectedLanguage">
+  <table class="table translation">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col" width="15%">{{'translations.table.translation' | translate}}</th>
+        <th scope="col" width="15%">{{'translations.table.translates' | translate}}</th>
+        <th scope="col" width="15%">{{'translations.table.hint' | translate}}</th>
+        <th scope="col" width="20%">{{'translations.table.phrase' | translate}}</th>
+        <th scope="col" width="15%">{{'translations.table.tags' | translate}}</th>
+        <th scope="col" width="15%"></th>
+      </tr>
+    </thead>
+    <tbody class="table-hover">
+    <tr app-translationentry
+        *ngFor="let translation of coursePick.selectedChapter.translations"
+        [translation]="translation"
+        [language]="coursePick.selectedLanguage"
+        (finishedEditEvent)="finishedEdit($event,translation)"
+        (removeTranslationEvent)="removeTranslation(translation)"></tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,79 @@
+<td *ngIf="translation.edit" class="translation">
+  <input type="text" class="form-control form-control-sm" name="translation" [(ngModel)]="translation.translation">
+</td>
+<td *ngIf="translation.edit" class="translates">
+  <div *ngFor="let translates of translation.translatesTo | filterLanguage:selectedLanguage" class="row">
+    <div class="col">
+      <input type="text" class="form-control form-control-sm" name="translatesTo" [(ngModel)]="translates.translation">
+    </div>
+  </div>
+</td>
+<td *ngIf="translation.edit" class="hint">
+  <input type="text" class="form-control form-control-sm" name="hint" [(ngModel)]="translation.hint">
+</td>
+<td *ngIf="translation.edit" class="phrase">
+  <div class="row">
+    <div class="col">
+    <div class="input-group input-group-sm">
+      <input type="text" class="form-control form-control-sm" [(ngModel)]="phraseInput">
+      <div class="input-group-append">
+        <button class="material-icons btn btn-outline-dark" (click)="addToPhrases()">add</button>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="row mt-1" *ngFor="let phrase of translation.phrases">
+    <div class="col">
+      <button class="tag" (click)="deletePhrase(phrase)">{{phrase.translation}}
+        <i class="material-icons">highlight_off</i>
+      </button>
+    </div>
+  </div>
+</td>
+<td *ngIf="translation.edit" class="tag">
+  <div class="row">
+  <div class="input-group input-group-sm">
+    <input type="text" class="form-control form-control-sm" name="tag"
+           [(ngModel)]="tagInput"
+           [typeahead]="getAvailableTags()"
+           [typeaheadMinLength]="0"
+           (typeaheadOnSelect)="addToTags($event.value)"
+           typeaheadOptionField="name">
+    <div class="input-group-append">
+      <button class="material-icons btn btn-outline-dark" (click)="addToTags(tagInput)">add</button>
+    </div>
+  </div>
+  </div>
+  <div class="row mt-1">
+    <button *ngFor="let tag of translation.tags" class="tag" (click)="deleteTag(tag)">{{tag.name}} <i
+      class="material-icons">highlight_off</i></button>
+  </div>
+</td>
+<td *ngIf="translation.edit" class="actions">
+  <div class="btn-group" role="group">
+    <button class="material-icons btn btn-outline-info btn-sm" (click)="saveTranslation()">done</button>
+    <button class="material-icons btn btn-outline-info btn-sm" (click)="cancelEdit()">clear</button>
+  </div>
+</td>
+
+<td *ngIf="!translation.edit">
+  {{translation.translation}}
+</td>
+<td *ngIf="!translation.edit">
+  <span *ngFor="let translatesTo of translation.translatesTo | filterLanguage:selectedLanguage">{{translatesTo.translation}}</span>
+</td>
+<td *ngIf="!translation.edit">
+  {{translation.hint}}
+</td>
+<td *ngIf="!translation.edit">
+  <button *ngFor="let phrase of translation.phrases" class="tag">{{phrase.translation}}</button>
+</td>
+<td *ngIf="!translation.edit">
+  <button *ngFor="let tag of translation.tags" class="tag">{{tag.name}}</button>
+</td>
+<td *ngIf="!translation.edit">
+  <div class="btn-group" role="group">
+    <button class="material-icons btn btn-outline-info btn-sm" (click)="editTranslation(translation)">create</button>
+    <button class="material-icons btn btn-outline-info btn-sm" (click)="removeTranslation()">clear</button>
+  </div>
+</td>

@@ -1,0 +1,34 @@
+<div class="row">
+  <div class="col-2">{{'translations.course' | translate}}</div>
+  <div class="col-lg-5 col-10">
+    <div class="input-group">
+      <select class="form-control" [(ngModel)]="coursePick.selectedCourse" (change)="changeCourse()">
+        <option *ngFor="let course of courses" [ngValue]="course">
+          {{course.name}} ({{'language.'+course.language | translate}})
+        </option>
+      </select>
+      <div class="input-group-append">
+        <a *ngIf="coursePick.selectedCourse" class="material-icons btn btn-outline-info"
+           routerLink="/course/{{coursePick.selectedCourse.id}}">create</a>
+        <a class="material-icons btn btn-outline-info" routerLink="/course/new">add</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-2">{{'translations.chapter' | translate}}</div>
+  <div class="col-lg-5 col-10">
+    <select *ngIf="coursePick.selectedCourse" class="form-control" [(ngModel)]="coursePick.selectedChapter"
+            (change)="refreshChapter()">
+      <option *ngFor="let chapter of coursePick.selectedCourse.chapters" [ngValue]="chapter">{{chapter.name}}</option>
+    </select>
+  </div>
+</div>
+<div class="row mt-2">
+  <div class="col-2">{{'translations.language' | translate}}</div>
+  <div class="col-lg-5 col-10">
+    <select class="form-control" [(ngModel)]="coursePick.selectedLanguage">
+      <option *ngFor="let language of languages" [value]="language">{{ 'language.'+language | translate}}</option>
+    </select>
+  </div>
+</div>

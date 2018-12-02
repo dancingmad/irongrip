@@ -1,9 +1,12 @@
 package com.fiftyoneapps.irongrp.service.translation.model;
 
+import com.fiftyoneapps.irongrp.service.training.model.ChapterStatistics;
+import com.fiftyoneapps.irongrp.service.user.model.User;
 import org.neo4j.ogm.annotation.GeneratedValue;
 import org.neo4j.ogm.annotation.Id;
 import org.neo4j.ogm.annotation.NodeEntity;
 import org.neo4j.ogm.annotation.Relationship;
+import org.springframework.data.annotation.Transient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,28 +20,35 @@ public class Chapter {
 
     private String name;
 
-    @Relationship(type = "contains")
+    @Relationship(type = "translations")
     private List<Translation> translations;
 
-    @Relationship(type = "previous")
-    private Chapter previous;
+    private int index;
 
-    @Relationship(type = "next")
-    private Chapter next;
+    @Relationship(type = "createdBy")
+    private User createdBy;
 
-    @Relationship(type = "belongs")
-    private Course course;
+    @Transient
+    private ChapterStatistics chapterStatistics;
 
-    public Course getCourse() {
-        return course;
+    public User getCreatedBy() {
+        return createdBy;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public String getName() {
@@ -56,23 +66,23 @@ public class Chapter {
         return translations;
     }
 
+    public ChapterStatistics getChapterStatistics() {
+        return chapterStatistics;
+    }
+
+    public void setChapterStatistics(ChapterStatistics chapterStatistics) {
+        this.chapterStatistics = chapterStatistics;
+    }
+
     public void setTranslations(List<Translation> translations) {
         this.translations = translations;
     }
 
-    public Chapter getPrevious() {
-        return previous;
+    public Chapter merge(Chapter chapter) {
+        this.translations = chapter.translations;
+        this.name = chapter.name;
+        return this;
     }
 
-    public void setPrevious(Chapter previous) {
-        this.previous = previous;
-    }
 
-    public Chapter getNext() {
-        return next;
-    }
-
-    public void setNext(Chapter next) {
-        this.next = next;
-    }
 }

@@ -1,0 +1,53 @@
+td .tag {
+  margin-right:5px;
+  padding: 2px;
+  color: white;
+  background-color: lightblue;
+  border: 1px solid lightblue;
+  border-radius: 5px;
+  font-size:0.7em;
+}
+
+td .tag:hover {
+  background-color: #50acca;
+}
+
+td .tag i {
+  display:none;
+}
+
+td .tag:hover i {
+  display:inline;
+}
+
+
+
+td.translation {
+  width: 15%;
+}
+
+td.translates {
+  width: 15%;
+}
+
+td.hint {
+  width: 15%;
+}
+
+td.phrase {
+  width: 20%;
+  max-width: 300px;
+}
+
+td.phrase input:focus {
+
+}
+
+
+td.tag {
+  width: 15%;
+}
+
+td.actions {
+  width: 15%;
+}
